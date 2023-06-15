@@ -1,0 +1,216 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"version": "1.0.1",
+		"title": "Express API for 'TaskPro' project",
+		"description": "REST API Application for 'TaskPro' project by ITDreamers, (GoIT), 2023",
+		"contact": {
+			"name": "Git repository",
+			"url": "https://github.com/svmoskalyov/taskpro-api"
+		},
+		"license": {
+			"name": "License - MIT",
+			"url": "https://opensource.org/licenses/MIT"
+		}
+	},
+	"consumes": ["application/json"],
+	"produces": ["application/json"],
+	"servers": [
+		{ "url": "http://localhost:5000",   "description": "Development server" },
+		{ "url": "https://taskpro-api.onrender.com",   "description": "Production server" }
+	],
+	"tags": [
+		{
+			"name": "Auth",
+			"description": "Authorization endpoints"
+		}
+	],
+	"paths": {
+		"/auth/register": {
+			"post": {
+				"tags": ["Auth"],
+				"summary": "User registration",
+				"parameters": [],
+				"requestBody": {
+					"description": "Registration's object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegistrationRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RegistrationResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"409": {
+						"description": "Provided email already exists",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"tags": ["Auth"],
+				"summary": "User log in",
+				"parameters": [],
+				"requestBody": {
+					"description": "Login's object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"409": {
+						"description": "Provided email already exists",
+						"content": {}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"RegistrationRequest": {
+				"type": "object",
+				"required": ["name", "email", "password"],
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "User's name",
+						"example": "User Name"
+					},
+					"email": {
+						"type": "string",
+						"description": "User's email",
+						"format": "email"
+					},
+					"password": {
+						"type": "string",
+						"description": "User's password",
+						"example": "qwerty123"
+					}
+				}
+			},
+			"RegistrationResponse": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"type": "string",
+						"description": "User's email",
+						"format": "email"
+					},
+					"userId": {
+						"type": "number",
+						"description": "User's id",
+						"example": "32143232436545474"
+					}
+				}
+			},
+			"LoginRequest": {
+				"type": "object",
+				"required": ["email", "password"],
+				"properties": {
+					"email": {
+						"type": "string",
+						"description": "User's email",
+						"format": "email"
+					},
+					"password": {
+						"type": "string",
+						"description": "User's password",
+						"example": "qwerty123"
+					}
+				}
+			},
+			"LoginResponse": {
+				"type": "object",
+				"properties": {
+					"token": {
+						"type": "string",
+						"description": "User's token",
+						"example": "3214gdf32324GFedw36545Y474"
+					},
+					"user": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"type": "number",
+								"description": "User's id",
+								"example": "32143232436545474"
+							},
+							"email": {
+								"type": "string",
+								"description": "User's email",
+								"format": "email"
+							}
+						}
+					}
+				}
+			},
+			"RegistrationResponseExample": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"email": {
+							"type": "string",
+							"description": "User's email",
+							"format": "email"
+						},
+						"userId": {
+							"type": "number",
+							"description": "User's id",
+							"example": "32143232436545474"
+						}
+					}
+				},
+				"example": [
+					{ "email": "1@gmail.com", "userId": "1" },
+					{ "email": "2@gmail.com", "userId": "2" }
+				]
+			}
+		},
+		"securitySchemes": {
+			"Bearer": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	}
+}
