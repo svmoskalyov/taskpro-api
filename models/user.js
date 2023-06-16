@@ -27,6 +27,11 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
+    theme: {
+      type: String,
+      enum: ["dark", "light", "violet"],
+      default: "dark",
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -44,9 +49,14 @@ const loginSchema = Joi.object({
   password: Joi.string().min(8).max(64).required(),
 });
 
+const themeSchema = Joi.object({
+  theme: Joi.string().valid("dark", "light", "violet"),
+});
+
 const schemas = {
   registerSchema,
   loginSchema,
+  themeSchema,
 };
 
 const User = model("user", userSchema);
