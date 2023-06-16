@@ -72,6 +72,16 @@ const updateProfile = async (req, res) => {
   });
 };
 
+const theme = async (req, res) => {
+  const { _id, email } = req.user;
+  const result = await User.findByIdAndUpdate(_id, req.body, { new: true });
+
+  res.json({
+    email,
+    theme: result.theme,
+  });
+};
+
 const logout = async (req, res) => {
   const { _id } = req.user;
   await User.findByIdAndUpdate(_id, { token: "" });
@@ -83,5 +93,6 @@ module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   updateProfile: ctrlWrapper(updateProfile),
+  theme: ctrlWrapper(theme),
   logout: ctrlWrapper(logout),
 };

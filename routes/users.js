@@ -19,6 +19,13 @@ router.put(
   ctrl.updateProfile
 );
 
+router.patch(
+  "/theme",
+  authenticate,
+  validateBody(schemas.themeSchema),
+  ctrl.theme
+);
+
 router.post("/logout", authenticate, ctrl.logout);
 
 module.exports = router;
