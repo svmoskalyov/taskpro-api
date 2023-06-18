@@ -16,19 +16,22 @@
 	"consumes": ["application/json"],
 	"produces": ["application/json"],
 	"servers": [
-		{ "url": "http://localhost:5000",   "description": "Development server" },
-		{ "url": "https://taskpro-api.onrender.com",   "description": "Production server" }
+		{ "url": "http://localhost:5000", "description": "Development server" },
+		{
+			"url": "https://taskpro-api.onrender.com",
+			"description": "Production server"
+		}
 	],
 	"tags": [
 		{
-			"name": "Auth",
+			"name": "UsersAuth",
 			"description": "Authorization endpoints"
 		}
 	],
 	"paths": {
-		"/auth/register": {
+		"/users/register": {
 			"post": {
-				"tags": ["Auth"],
+				"tags": ["UsersAuth"],
 				"summary": "User registration",
 				"parameters": [],
 				"requestBody": {
@@ -44,7 +47,7 @@
 				},
 				"responses": {
 					"201": {
-						"description": "Successful operation",
+						"description": "Created (Successful operation)",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -54,20 +57,20 @@
 						}
 					},
 					"400": {
-						"description": "Bad request (invalid request body)",
+						"description": "Bad request (Invalid request body or Missing fields)",
 						"content": {}
 					},
 					"409": {
-						"description": "Provided email already exists",
+						"description": "Conflict (Email already in use)",
 						"content": {}
 					}
 				}
 			}
 		},
-		"/auth/login": {
+		"/users/login": {
 			"post": {
-				"tags": ["Auth"],
-				"summary": "User log in",
+				"tags": ["UsersAuth"],
+				"summary": "User authentication",
 				"parameters": [],
 				"requestBody": {
 					"description": "Login's object",
@@ -82,7 +85,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Successful operation",
+						"description": "OK (Successful operation)",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -92,11 +95,122 @@
 						}
 					},
 					"400": {
-						"description": "Bad request (invalid request body)",
+						"description": "Bad request (Invalid request body or Missing fields)",
 						"content": {}
 					},
-					"409": {
-						"description": "Provided email already exists",
+					"401": {
+						"description": "Not authorized (Email or password is wrong)",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/users/profile": {
+			"put": {
+				"security": [{ "Bearer": [] }],
+				"tags": ["UsersAuth"],
+				"summary": "User edit profile",
+				"parameters": [],
+				"requestBody": {
+					"description": "Profile update object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ProfileUpdateRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK (Successful operation)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProfileUpdateResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (Invalid request body / No token)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized (Invalid token)",
+						"content": {}
+					},
+					"404": {
+						"description": "Not found (Invalid user / Invalid session)",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/users/theme": {
+			"patch": {
+				"security": [{ "Bearer": [] }],
+				"tags": ["UsersAuth"],
+				"summary": "User edit profile",
+				"parameters": [],
+				"requestBody": {
+					"description": "Theme update object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ThemeUpdateRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK (Successful operation)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ThemeUpdateResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (Invalid request body / No token)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized (Invalid token)",
+						"content": {}
+					},
+					"404": {
+						"description": "Not found (Invalid user / Invalid session)",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/users/logout": {
+			"post": {
+				"security": [{ "Bearer": [] }],
+				"tags": ["UsersAuth"],
+				"summary": "User logout",
+				"parameters": [],
+				"responses": {
+					"204": {
+						"description": "No Content (Successful operation)"
+					},
+					"400": {
+						"description": "Bad request (No token)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized (Invalid token)",
+						"content": {}
+					},
+					"404": {
+						"description": "Not found (Invalid user / Invalid session)",
 						"content": {}
 					}
 				}
@@ -129,15 +243,20 @@
 			"RegistrationResponse": {
 				"type": "object",
 				"properties": {
-					"email": {
-						"type": "string",
-						"description": "User's email",
-						"format": "email"
-					},
-					"userId": {
-						"type": "number",
-						"description": "User's id",
-						"example": "32143232436545474"
+					"user": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string",
+								"description": "User's name",
+								"example": "User Name"
+							},
+							"email": {
+								"type": "string",
+								"description": "User's email",
+								"format": "email"
+							}
+						}
 					}
 				}
 			},
@@ -163,15 +282,45 @@
 					"token": {
 						"type": "string",
 						"description": "User's token",
-						"example": "3214gdf32324GFedw36545Y474"
+						"example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGYyMmRkYTJkOGY4NTM3ZDU4MDgxMiIsImlhdCI6MTY4NzEwNDE4MywiZXhwIjoxNjg3MTg2OTgzfQ.ACnMrbr2S0GB9uSVpb2oGQI813s1kNLuiFZEFCfUN0s"
 					},
 					"user": {
 						"type": "object",
 						"properties": {
-							"id": {
-								"type": "number",
-								"description": "User's id",
-								"example": "32143232436545474"
+							"email": {
+								"type": "string",
+								"description": "User's email",
+								"format": "email"
+							}
+						}
+					}
+				}
+			},
+			"ProfileUpdateRequest": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "User's name",
+						"example": "User Name"
+					},
+					"email": {
+						"type": "string",
+						"description": "User's email",
+						"format": "email"
+					}
+				}
+			},
+			"ProfileUpdateResponse": {
+				"type": "object",
+				"properties": {
+					"user": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string",
+								"description": "User's name",
+								"example": "User Name"
 							},
 							"email": {
 								"type": "string",
@@ -182,27 +331,31 @@
 					}
 				}
 			},
-			"RegistrationResponseExample": {
-				"type": "array",
-				"items": {
-					"type": "object",
-					"properties": {
-						"email": {
-							"type": "string",
-							"description": "User's email",
-							"format": "email"
-						},
-						"userId": {
-							"type": "number",
-							"description": "User's id",
-							"example": "32143232436545474"
-						}
+			"ThemeUpdateRequest": {
+				"type": "object",
+				"properties": {
+					"theme": {
+						"type": "string",
+						"description": "User's color theme",
+						"enum": ["dark", "light", "violet"],
+						"example": "dark"
 					}
-				},
-				"example": [
-					{ "email": "1@gmail.com", "userId": "1" },
-					{ "email": "2@gmail.com", "userId": "2" }
-				]
+				}
+			},
+			"ThemeUpdateResponse": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"type": "string",
+						"description": "User's email",
+						"format": "email"
+					},
+					"theme": {
+						"type": "string",
+						"description": "User's color theme",
+						"example": "dark"
+					}
+				}
 			}
 		},
 		"securitySchemes": {
