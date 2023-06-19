@@ -23,7 +23,11 @@ const userSchema = new Schema(
       minlength: 8,
       required: [true, "Set password for user"],
     },
-    token: {
+    accessToken: {
+      type: String,
+      default: "",
+    },
+    refreshToken: {
       type: String,
       default: "",
     },
@@ -57,6 +61,10 @@ const loginSchema = Joi.object({
   password: Joi.string().min(8).max(64).required(),
 });
 
+const refreshSchema = Joi.object({
+  refreshToken: Joi.string().required(),
+});
+
 const themeSchema = Joi.object({
   theme: Joi.string().valid("dark", "light", "violet"),
 });
@@ -64,6 +72,7 @@ const themeSchema = Joi.object({
 const schemas = {
   registerSchema,
   loginSchema,
+  refreshSchema,
   themeSchema,
 };
 

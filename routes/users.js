@@ -12,6 +12,8 @@ router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
 
 router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
 
+router.post("/refresh", validateBody(schemas.refreshSchema), ctrl.refresh);
+
 router.get("/current", authenticate, ctrl.getCurrent);
 
 router.put(
