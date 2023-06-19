@@ -37,6 +37,8 @@ router.patch(
   ctrl.theme
 );
 
+router.post("/help", validateBody(schemas.helpSchema), ctrl.help);
+
 router.post("/logout", authenticate, ctrl.logout);
 
 module.exports = router;

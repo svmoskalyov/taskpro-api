@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const { User } = require("../models/user");
-const { ctrlWrapper, HttpError } = require("../helpers");
+const { ctrlWrapper, HttpError, sendEmail } = require("../helpers");
 
 const { ACCESS_SECRET_KEY, REFRESH_SECRET_KEY } = process.env;
 
@@ -137,6 +137,22 @@ const theme = async (req, res) => {
   });
 };
 
+const help = async (req, res) => {
+  const { email, comment } = req.body;
+
+  const helpEmail = {
+    to: email,
+    subject: "Help with TaskPro",
+    html: `<h5>Our specialist will contact you soon.</h5> <h6>We have received your message for help with the TaskPro:</h6> <p>${comment}</p>`,
+  };
+
+  await sendEmail(helpEmail);
+
+  res.status(200).json({
+    message: "Email send successful",
+  });
+};
+
 const logout = async (req, res) => {
   const { id } = req.user;
   await User.findByIdAndUpdate(id, { accessToken: "", refreshToken: "" });
@@ -152,5 +168,6 @@ module.exports = {
   updateProfile: ctrlWrapper(updateProfile),
   updateAvatar: ctrlWrapper(updateAvatar),
   theme: ctrlWrapper(theme),
+  help: ctrlWrapper(help),
   logout: ctrlWrapper(logout),
 };
