@@ -23,7 +23,19 @@ const userSchema = new Schema(
       minlength: 8,
       required: [true, "Set password for user"],
     },
-    token: {
+    accessToken: {
+      type: String,
+      default: "",
+    },
+    refreshToken: {
+      type: String,
+      default: "",
+    },
+    avatarURL: {
+      type: String,
+      default: "",
+    },
+    avatarName: {
       type: String,
       default: "",
     },
@@ -49,14 +61,25 @@ const loginSchema = Joi.object({
   password: Joi.string().min(8).max(64).required(),
 });
 
+const refreshSchema = Joi.object({
+  refreshToken: Joi.string().required(),
+});
+
 const themeSchema = Joi.object({
   theme: Joi.string().valid("dark", "light", "violet"),
+});
+
+const helpSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required(),
+  comment: Joi.string().required(),
 });
 
 const schemas = {
   registerSchema,
   loginSchema,
+  refreshSchema,
   themeSchema,
+  helpSchema,
 };
 
 const User = model("user", userSchema);
