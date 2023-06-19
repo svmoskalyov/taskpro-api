@@ -61,7 +61,9 @@ const login = async (req, res) => {
 const googleAuth = async (req, res) => {
   const { _id: id } = req.user;
 
-  const payload = { id };
+  const payload = {
+    id,
+  };
 
   const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
     expiresIn: "23h",
@@ -87,7 +89,9 @@ const refresh = async (req, res) => {
       throw HttpError(403, "invalid token");
     }
 
-    const payload = { id };
+    const payload = {
+      id,
+    };
 
     const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
       expiresIn: "23h",
@@ -98,7 +102,10 @@ const refresh = async (req, res) => {
 
     await User.findByIdAndUpdate(id, { accessToken, refreshToken });
 
-    res.json({ accessToken, refreshToken });
+    res.json({
+      accessToken,
+      refreshToken,
+    });
   } catch (error) {
     throw HttpError(403, error.message);
   }
@@ -106,7 +113,10 @@ const refresh = async (req, res) => {
 
 const getCurrent = async (req, res) => {
   const { email } = req.user;
-  res.json({ email });
+
+  res.json({
+    email,
+  });
 };
 
 const updateProfile = async (req, res) => {
@@ -124,10 +134,10 @@ const updateProfile = async (req, res) => {
 };
 
 const updateAvatar = async (req, res) => {
-  const { _id } = req.user;
+  const { id } = req.user;
   const { path: avatarURL, filename: avatarName } = req.file;
 
-  await User.findByIdAndUpdate(_id, { avatarURL, avatarName });
+  await User.findByIdAndUpdate(id, { avatarURL, avatarName });
 
   res.status(200).json({
     avatarURL,
