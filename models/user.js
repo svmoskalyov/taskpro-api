@@ -27,6 +27,14 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
+    avatarURL: {
+      type: String,
+      default: "",
+    },
+    avatarName: {
+      type: String,
+      default: "",
+    },
     theme: {
       type: String,
       enum: ["dark", "light", "violet"],
