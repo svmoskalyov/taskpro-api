@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../models/user");
 const { ctrlWrapper, HttpError } = require("../helpers");
 
-const { SECRET_KEY } = process.env;
+const { ACCESS_SECRET_KEY, REFRESH_SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -45,15 +45,51 @@ const login = async (req, res) => {
     id: user._id,
   };
 
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
-  await User.findByIdAndUpdate(user._id, { token });
+  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
+    expiresIn: "23h",
+  });
+  const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
+    expiresIn: "7d",
+  });
+
+  await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
 
   res.json({
-    token,
-    user: {
-      email,
-    },
+    accessToken,
+    refreshToken,
   });
+};
+
+const refresh = async (req, res) => {
+  const { refreshToken: token } = req.body;
+
+  try {
+    const { id } = jwt.verify(token, REFRESH_SECRET_KEY);
+    const isExist = await User.findOne({ refreshToken: token });
+    if (!isExist) {
+      throw HttpError(403, "invalid token");
+    }
+
+    const payload = {
+      id,
+    };
+
+    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
+      expiresIn: "23h",
+    });
+    const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
+      expiresIn: "7d",
+    });
+
+    await User.findByIdAndUpdate(id, { accessToken, refreshToken });
+
+    res.json({
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    throw HttpError(403, error.message);
+  }
 };
 
 const getCurrent = async (req, res) => {
@@ -65,7 +101,7 @@ const getCurrent = async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-  const { _id: id } = req.user;
+  const { id } = req.user;
 
   const result = await User.findByIdAndUpdate(id, req.body, { new: true });
   if (!result) {
@@ -81,18 +117,17 @@ const updateProfile = async (req, res) => {
 };
 
 const theme = async (req, res) => {
-  const { _id, email } = req.user;
-  const result = await User.findByIdAndUpdate(_id, req.body, { new: true });
+  const { id } = req.user;
+  const result = await User.findByIdAndUpdate(id, req.body, { new: true });
 
   res.json({
-    email,
     theme: result.theme,
   });
 };
 
 const logout = async (req, res) => {
-  const { _id } = req.user;
-  await User.findByIdAndUpdate(_id, { token: "" });
+  const { id } = req.user;
+  await User.findByIdAndUpdate(id, { accessToken: "", refreshToken: "" });
 
   res.status(204).send();
 };
@@ -100,6 +135,7 @@ const logout = async (req, res) => {
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
+  refresh: ctrlWrapper(refresh),
   getCurrent: ctrlWrapper(getCurrent),
   updateProfile: ctrlWrapper(updateProfile),
   theme: ctrlWrapper(theme),
