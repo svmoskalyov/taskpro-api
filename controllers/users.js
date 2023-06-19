@@ -73,12 +73,11 @@ const updateProfile = async (req, res) => {
 };
 
 const theme = async (req, res) => {
-  const { _id, email } = req.user;
+  const { _id } = req.user;
   const result = await User.findByIdAndUpdate(_id, req.body, { new: true });
 
   res.json({
-    email,
-    theme: result.theme,
+       theme: result.theme,
   });
 };
 
