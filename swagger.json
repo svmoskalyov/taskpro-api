@@ -243,20 +243,15 @@
 			"RegistrationResponse": {
 				"type": "object",
 				"properties": {
-					"user": {
-						"type": "object",
-						"properties": {
-							"name": {
-								"type": "string",
-								"description": "User's name",
-								"example": "User Name"
-							},
-							"email": {
-								"type": "string",
-								"description": "User's email",
-								"format": "email"
-							}
-						}
+					"name": {
+						"type": "string",
+						"description": "User's name",
+						"example": "User Name"
+					},
+					"email": {
+						"type": "string",
+						"description": "User's email",
+						"format": "email"
 					}
 				}
 			},
@@ -279,20 +274,15 @@
 			"LoginResponse": {
 				"type": "object",
 				"properties": {
-					"token": {
+					"accessToken": {
 						"type": "string",
 						"description": "User's token",
 						"example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGYyMmRkYTJkOGY4NTM3ZDU4MDgxMiIsImlhdCI6MTY4NzEwNDE4MywiZXhwIjoxNjg3MTg2OTgzfQ.ACnMrbr2S0GB9uSVpb2oGQI813s1kNLuiFZEFCfUN0s"
 					},
-					"user": {
-						"type": "object",
-						"properties": {
-							"email": {
-								"type": "string",
-								"description": "User's email",
-								"format": "email"
-							}
-						}
+					"refreshToken": {
+						"type": "string",
+						"description": "User's token",
+						"example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGYyMmRkYTJkOGY4NTM3ZDU4MDgxMiIsImlhdCI6MTY4NzEwNDE4MywiZXhwIjoxNjg3MTg2OTgzfQ.ACnMrbr2S0GB9uSVpb2oGQI813s1kNLuiFZEFCfUN0s"
 					}
 				}
 			},
@@ -314,20 +304,15 @@
 			"ProfileUpdateResponse": {
 				"type": "object",
 				"properties": {
-					"user": {
-						"type": "object",
-						"properties": {
-							"name": {
-								"type": "string",
-								"description": "User's name",
-								"example": "User Name"
-							},
-							"email": {
-								"type": "string",
-								"description": "User's email",
-								"format": "email"
-							}
-						}
+					"name": {
+						"type": "string",
+						"description": "User's name",
+						"example": "User Name"
+					},
+					"email": {
+						"type": "string",
+						"description": "User's email",
+						"format": "email"
 					}
 				}
 			},
@@ -345,11 +330,6 @@
 			"ThemeUpdateResponse": {
 				"type": "object",
 				"properties": {
-					"email": {
-						"type": "string",
-						"description": "User's email",
-						"format": "email"
-					},
 					"theme": {
 						"type": "string",
 						"description": "User's color theme",
