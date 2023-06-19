@@ -56,6 +56,14 @@ const login = async (req, res) => {
   });
 };
 
+const getCurrent = async (req, res) => {
+  const { email } = req.user;
+
+  res.json({
+    email,
+  });
+};
+
 const updateProfile = async (req, res) => {
   const { _id: id } = req.user;
 
@@ -104,6 +112,7 @@ const logout = async (req, res) => {
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
+  getCurrent: ctrlWrapper(getCurrent),
   updateProfile: ctrlWrapper(updateProfile),
   updateAvatar: ctrlWrapper(updateAvatar),
   theme: ctrlWrapper(theme),
