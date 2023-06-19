@@ -21,10 +21,8 @@ const register = async (req, res) => {
   });
 
   res.status(201).json({
-    user: {
-      name: newUser.name,
-      email: newUser.email,
-    },
+    name: newUser.name,
+    email: newUser.email,
   });
 };
 
@@ -109,10 +107,8 @@ const updateProfile = async (req, res) => {
   }
 
   res.json({
-    user: {
-      name: result.name,
-      email: result.email,
-    },
+    name: result.name,
+    email: result.email,
   });
 };
 
@@ -123,7 +119,6 @@ const updateAvatar = async (req, res) => {
   await User.findByIdAndUpdate(_id, { avatarURL, avatarName });
 
   res.status(200).json({
-    message: "Successfully uploaded avatar",
     avatarURL,
   });
 };
