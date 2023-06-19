@@ -116,6 +116,18 @@ const updateProfile = async (req, res) => {
   });
 };
 
+const updateAvatar = async (req, res) => {
+  const { _id } = req.user;
+  const { path: avatarURL, filename: avatarName } = req.file;
+
+  await User.findByIdAndUpdate(_id, { avatarURL, avatarName });
+
+  res.status(200).json({
+    message: "Successfully uploaded avatar",
+    avatarURL,
+  });
+};
+
 const theme = async (req, res) => {
   const { id } = req.user;
   const result = await User.findByIdAndUpdate(id, req.body, { new: true });
@@ -138,6 +150,7 @@ module.exports = {
   refresh: ctrlWrapper(refresh),
   getCurrent: ctrlWrapper(getCurrent),
   updateProfile: ctrlWrapper(updateProfile),
+  updateAvatar: ctrlWrapper(updateAvatar),
   theme: ctrlWrapper(theme),
   logout: ctrlWrapper(logout),
 };
