@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../models/user");
 const { ctrlWrapper, HttpError, sendEmail } = require("../helpers");
 
-const { ACCESS_SECRET_KEY, REFRESH_SECRET_KEY } = process.env;
+const { ACCESS_SECRET_KEY, REFRESH_SECRET_KEY, FRONTEND_URL } = process.env;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -56,6 +56,27 @@ const login = async (req, res) => {
     accessToken,
     refreshToken,
   });
+};
+
+const googleAuth = async (req, res) => {
+  const { _id: id } = req.user;
+
+  const payload = {
+    id,
+  };
+
+  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
+    expiresIn: "23h",
+  });
+  const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
+    expiresIn: "7d",
+  });
+
+  await User.findByIdAndUpdate(id, { accessToken, refreshToken });
+
+  res.redirect(
+    `${FRONTEND_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}`
+  );
 };
 
 const refresh = async (req, res) => {
@@ -113,10 +134,10 @@ const updateProfile = async (req, res) => {
 };
 
 const updateAvatar = async (req, res) => {
-  const { _id } = req.user;
+  const { id } = req.user;
   const { path: avatarURL, filename: avatarName } = req.file;
 
-  await User.findByIdAndUpdate(_id, { avatarURL, avatarName });
+  await User.findByIdAndUpdate(id, { avatarURL, avatarName });
 
   res.status(200).json({
     avatarURL,
@@ -158,6 +179,7 @@ const logout = async (req, res) => {
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
+  googleAuth: ctrlWrapper(googleAuth),
   refresh: ctrlWrapper(refresh),
   getCurrent: ctrlWrapper(getCurrent),
   updateProfile: ctrlWrapper(updateProfile),

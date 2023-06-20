@@ -2,11 +2,27 @@ const express = require("express");
 
 const ctrl = require("../controllers/users");
 
-const { validateBody, authenticate, uploadCloud } = require("../middlewares");
+const {
+  validateBody,
+  authenticate,
+  uploadCloud,
+  passport,
+} = require("../middlewares");
 
 const { schemas } = require("../models/user");
 
 const router = express.Router();
+
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["email", "profile"] })
+);
+
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { session: false }),
+  ctrl.googleAuth
+);
 
 router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
 
