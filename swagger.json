@@ -105,8 +105,29 @@
 				}
 			}
 		},
+		"/users/google": {
+			"get": {
+				"tags": ["UsersAuth"],
+				"summary": "User Google authentication",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "OK (Successful operation (redirect to front-end with accessToken, refreshToken and sid in query). Then use GET /user)"
+						},
+					"400": {
+						"description": "Bad request (Invalid request body or Missing fields)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized (Email or password is wrong)",
+						"content": {}
+					}
+				}
+			}
+		},
 		"/users/refresh": {
 			"post": {
+				"security": [{ "Bearer": [] }],
 				"tags": ["UsersAuth"],
 				"summary": "User refresh token",
 				"parameters": [],
@@ -271,10 +292,10 @@
 					"description": "Avatar update object",
 					"required": true,
 					"content": {
-						"image": {
+						"image/png": {
 							"schema": {
-								"type": "string",
-								"format": "binary"
+								"$ref": "#/components/schemas/AvatarUpdateRequest"
+
 							}
 						}
 					}
@@ -466,18 +487,12 @@
 					}
 				}
 			},
-			"AvatrUpdateRequest": {
+			"AvatarUpdateRequest": {
 				"type": "object",
 				"properties": {
-					"name": {
+					"file": {
 						"type": "string",
-						"description": "User's name",
-						"example": "User Name"
-					},
-					"email": {
-						"type": "string",
-						"description": "User's email",
-						"format": "email"
+								"format": "binary"
 					}
 				}
 			},
@@ -487,7 +502,7 @@
 					"avatarURL": {
 						"type": "string",
 						"description": "User's avatar URL",
-						"example": "some url to added"
+						"example": "some url to be added"
 					}
 				}
 			},
