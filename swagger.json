@@ -13,7 +13,7 @@
 			"url": "https://opensource.org/licenses/MIT"
 		}
 	},
-	"consumes": ["application/json"],
+	"consumes": ["application/json", "image"],
 	"produces": ["application/json"],
 	"servers": [
 		{ "url": "http://localhost:5000", "description": "Development server" },
@@ -105,6 +105,76 @@
 				}
 			}
 		},
+		"/users/refresh": {
+			"post": {
+				"tags": ["UsersAuth"],
+				"summary": "User refresh token",
+				"parameters": [],
+				"requestBody": {
+					"description": "Refresh object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RefreshRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK (Successful operation)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (Invalid request body or Missing fields)",
+						"content": {}
+					},
+					"403": {
+						"description": "Forbidden (Invalid refresh token)",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/users/current": {
+			"get": {
+				"security": [{ "Bearer": [] }],
+				"tags": ["UsersAuth"],
+				"summary": "Get current user info",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "OK (Successful operation)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetCurrentUserResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (Invalid request body / No token)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized (Invalid access token)",
+						"content": {}
+					},
+					"404": {
+						"description": "Not found (Invalid user / Invalid session)",
+						"content": {}
+					}
+				}
+			}
+		},
 		"/users/profile": {
 			"put": {
 				"security": [{ "Bearer": [] }],
@@ -138,7 +208,7 @@
 						"content": {}
 					},
 					"401": {
-						"description": "Not authorized (Invalid token)",
+						"description": "Not authorized (Invalid access token)",
 						"content": {}
 					},
 					"404": {
@@ -152,7 +222,7 @@
 			"patch": {
 				"security": [{ "Bearer": [] }],
 				"tags": ["UsersAuth"],
-				"summary": "User edit profile",
+				"summary": "User edit theme",
 				"parameters": [],
 				"requestBody": {
 					"description": "Theme update object",
@@ -172,6 +242,50 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ThemeUpdateResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (Invalid request body / No token)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized (Invalid token)",
+						"content": {}
+					},
+					"404": {
+						"description": "Not found (Invalid user / Invalid session)",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/users/avatar": {
+			"post": {
+				"security": [{ "Bearer": [] }],
+				"tags": ["UsersAuth"],
+				"summary": "User avatar update",
+				"parameters": [],
+				"requestBody": {
+					"description": "Avatar update object",
+					"required": true,
+					"content": {
+						"image": {
+							"schema": {
+								"type": "string",
+								"format": "binary"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK (Successful operation)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AvatarUpdateResponse"
 								}
 							}
 						}
@@ -276,13 +390,49 @@
 				"properties": {
 					"accessToken": {
 						"type": "string",
-						"description": "User's token",
+						"description": "User's access token",
 						"example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGYyMmRkYTJkOGY4NTM3ZDU4MDgxMiIsImlhdCI6MTY4NzEwNDE4MywiZXhwIjoxNjg3MTg2OTgzfQ.ACnMrbr2S0GB9uSVpb2oGQI813s1kNLuiFZEFCfUN0s"
 					},
 					"refreshToken": {
 						"type": "string",
-						"description": "User's token",
+						"description": "User's refresh token",
 						"example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGYyMmRkYTJkOGY4NTM3ZDU4MDgxMiIsImlhdCI6MTY4NzEwNDE4MywiZXhwIjoxNjg3MTg2OTgzfQ.ACnMrbr2S0GB9uSVpb2oGQI813s1kNLuiFZEFCfUN0s"
+					}
+				}
+			},
+			"RefreshRequest": {
+				"type": "object",
+				"required": ["refreshToken"],
+				"properties": {
+					"refreshToken": {
+						"type": "string",
+						"description": "User's refresh token",
+						"example": "qwerty1fbhtyj166.yuikui154564561.5y1rh23"
+					}
+				}
+			},
+			"RefreshResponse": {
+				"type": "object",
+				"properties": {
+					"accessToken": {
+						"type": "string",
+						"description": "User's access token",
+						"example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGYyMmRkYTJkOGY4NTM3ZDU4MDgxMiIsImlhdCI6MTY4NzEwNDE4MywiZXhwIjoxNjg3MTg2OTgzfQ.ACnMrbr2S0GB9uSVpb2oGQI813s1kNLuiFZEFCfUN0s"
+					},
+					"refreshToken": {
+						"type": "string",
+						"description": "User's refresh token",
+						"example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGYyMmRkYTJkOGY4NTM3ZDU4MDgxMiIsImlhdCI6MTY4NzEwNDE4MywiZXhwIjoxNjg3MTg2OTgzfQ.ACnMrbr2S0GB9uSVpb2oGQI813s1kNLuiFZEFCfUN0s"
+					}
+				}
+			},
+			"GetCurrentUserResponse": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"type": "string",
+						"description": "User's email",
+						"format": "email"
 					}
 				}
 			},
@@ -313,6 +463,31 @@
 						"type": "string",
 						"description": "User's email",
 						"format": "email"
+					}
+				}
+			},
+			"AvatrUpdateRequest": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "User's name",
+						"example": "User Name"
+					},
+					"email": {
+						"type": "string",
+						"description": "User's email",
+						"format": "email"
+					}
+				}
+			},
+			"AvatarUpdateResponse": {
+				"type": "object",
+				"properties": {
+					"avatarURL": {
+						"type": "string",
+						"description": "User's avatar URL",
+						"example": "some url to added"
 					}
 				}
 			},
