@@ -112,10 +112,15 @@ const refresh = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-  const { email } = req.user;
+  const { name, email, avatarURL, theme } = req.user;
+
+  console.log("req.user -->", req.user.id);
 
   res.json({
+    name,
     email,
+    avatarURL,
+    theme,
   });
 };
 
