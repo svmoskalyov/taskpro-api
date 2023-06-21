@@ -356,10 +356,10 @@
 		"/tasks": {
 			"post": {
 				"tags": ["Tasks"],
-				"summary": "Task add",
+				"summary": "Add task",
 				"parameters": [],
 				"requestBody": {
-					"description": "Task object",
+					"description": "Add Task object",
 					"required": true,
 					"content": {
 						"application/json": {
@@ -375,7 +375,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/RegistrationResponse"
+									"$ref": "#/components/schemas/AddTaskResponse"
 								}
 							}
 						}
@@ -389,9 +389,80 @@
 						"content": {}
 					}
 				}
-			}
+			},
+			"delete": {
+				"tags": ["Tasks"],
+				"summary": "Delete task",
+				"parameters": [],
+				"requestBody": {
+					"description": "Delete task object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/deleteTaskRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Created (Successful operation)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AddTaskResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (Invalid request body or Missing fields)",
+						"content": {}
+					},
+					"409": {
+						"description": "Conflict (Email already in use)",
+						"content": {}
+					}
+				}
+		},	
+			"get": {
+				"tags": ["Tasks"],
+				"summary": "Add task",
+				"parameters": [],
+				"requestBody": {
+					"description": "Add Task object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AddTaskRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Created (Successful operation)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AddTaskResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (Invalid request body or Missing fields)",
+						"content": {}
+					},
+					"409": {
+						"description": "Conflict (Email already in use)",
+						"content": {}
+					}
+				}
 		}
-	},
+	}},
 	"components": {
 		"schemas": {
 			"RegistrationRequest": {
@@ -580,6 +651,68 @@
 						"type": "string",
 						"description": "User's color theme",
 						"example": "dark"
+					}
+				}
+			},
+			"AddTaskRequest": {
+				"type": "object",
+				"properties": {
+					"title": {
+						"type": "string",
+						"description": "Task title",
+						"example": "My first important task"
+					},
+					"text": {
+						"type": "string",
+						"description": "Task description",
+						"example": "Some text, describing My first important task"
+					},
+					"priority": {
+						"type": "string",
+						"description": "Task priority",
+						"enum": ["low", "middle", "high", "none"],
+						"example": "high"
+					},
+					"deadline": {
+						"type": "string",
+						"description": "Task deadline",
+						"example": "2024-01-26T13:51:50.417-07:00"
+					}
+				}
+			},
+			"AddTaskResponse": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "Task id",
+						"example": "649343d3fd8c37bb6a6b8958"
+					},
+					"title": {
+						"type": "string",
+						"description": "Task title",
+						"example": "My first important task"
+					},
+					"text": {
+						"type": "string",
+						"description": "Task description",
+						"example": "Some text, describing My first important task"
+					},
+					"priority": {
+						"type": "string",
+						"description": "Task priority",
+						"enum": ["low", "middle", "high", "none"],
+						"example": "high"
+					},
+					"deadline": {
+						"type": "string",
+						"description": "Task deadline",
+						"example": "2024-01-26T13:51:50.417-07:00"
+					},
+					"createdAt": {
+						"type": "string",
+						"description": "Task deadline",
+						"example": "2023-06-21T18:25:45.953+00:00"
 					}
 				}
 			}

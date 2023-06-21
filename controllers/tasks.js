@@ -1,15 +1,17 @@
 const { Task } = require("../models/task");
 const {
-  //  HttpError, 
+   HttpError, 
    ctrlWrapper } = require("../helpers");
 
 const addTask = async (req, res) => {
+
 	const { _id: owner } = req.user;
 
 	const newTask = await Task.create({ ...req.body, owner });
-  const {title, text, priority, deadline, createdAt} = newTask
+  const {_id, title, text, priority, deadline, createdAt} = newTask
 	
   return res.status(201).json({
+    id: _id,
     title,
     text,
     priority,
@@ -19,44 +21,24 @@ const addTask = async (req, res) => {
   });
 }
 
-// const removeTask = async (req, res) => {
-// 	const { id } = req.params;
-// 	const deletedTask = await Task.findByIdAndRemove(id);
+const deleteTask = async (req, res) => {
+	const { id } = req.params;
+	const deletedTask = await Task.findByIdAndRemove(id);
 
-// 	if (!deletedTask) {
-// 		throw HttpError(404, "Not found");
-// 	}
-// 	return res.status(200).json({ message: "Task deleted" });
-// }
+	if (!deletedTask) {
+		throw HttpError(404, "Not found");
+	}
+	return res.status(204).json({ message: "Task deleted" });
+  // return res.status(200).json(deletedTask);
 
-// const getAllTasks = async (req, res) => {
+}
 
-// 	const { _id: owner } = req.user;
-// 	// const { page = 1, limit = 10, favorite } = req.query;
-// 	// const skip = (page - 1) * limit;
+const getAllTasks = async (req, res) => {
+	const { _id: owner } = req.user;
+  		const list = await Task.find({ owner }, " -updatedAt");
+		res.json(list);
+    }
 
-// 	// if (favorite) {
-// 	// 	const list =
-// 	// 		favorite === true
-// 	// 			? await Task.find(
-// 	// 					{ owner, favorite: true },
-// 	// 					"-createdAt -updatedAt",
-// 	// 					{ skip, limit }
-// 	// 			  )
-// 	// 			: await Task.find(
-// 	// 					{ owner, favorite: false },
-// 	// 					"-createdAt -updatedAt",
-// 	// 					{ skip, limit }
-// 	// 			  );
-// 	// 	res.json(list);
-// 	// } else {
-// 		const list = await Task.find({ owner }, "-createdAt -updatedAt", {
-// 			// skip,
-// 			// limit,
-// 		});
-// 		res.json(list);
-// 	// }
-// }
 
 // async function getTaskById(req, res) {
 // 	const { id } = req.params;
@@ -97,8 +79,8 @@ const addTask = async (req, res) => {
 
 module.exports = {
   addTask: ctrlWrapper(addTask),
-	// removeTask: ctrlWrapper(removeTask),
-	// getAllTasks: ctrlWrapper(getAllTasks),
+	deleteTask: ctrlWrapper(deleteTask),
+	getAllTasks: ctrlWrapper(getAllTasks),
 	// getTaskById: ctrlWrapper(getTaskById),
 	// updateStatusTask: ctrlWrapper(updateStatusTask),
 	// updateTaskById: ctrlWrapper(updateTaskById),
