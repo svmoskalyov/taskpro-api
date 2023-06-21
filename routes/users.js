@@ -28,18 +28,18 @@ router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
 
 router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
 
-router.post("/refresh", validateBody(schemas.refreshSchema), ctrl.refresh);
+router.post("/refresh", validateBody(schemas.refreshTokenSchema), ctrl.refresh);
 
 router.get("/current", authenticate, ctrl.getCurrent);
 
 router.put(
   "/profile",
   authenticate,
-  validateBody(schemas.registerSchema),
+  validateBody(schemas.updateProfileSchema),
   ctrl.updateProfile
 );
 
-router.post(
+router.patch(
   "/avatar",
   authenticate,
   uploadCloud.single("avatar"),
