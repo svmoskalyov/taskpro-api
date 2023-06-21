@@ -13,8 +13,6 @@
 			"url": "https://opensource.org/licenses/MIT"
 		}
 	},
-	"consumes": ["application/json", "image"],
-	"produces": ["application/json"],
 	"servers": [
 		{ "url": "http://localhost:5000", "description": "Development server" },
 		{
@@ -26,6 +24,10 @@
 		{
 			"name": "UsersAuth",
 			"description": "Authorization endpoints"
+		},
+		{
+			"name": "Tasks",
+			"description": "Tasks operations endpoints"
 		}
 	],
 	"paths": {
@@ -346,6 +348,44 @@
 					},
 					"404": {
 						"description": "Not found (Invalid user / Invalid session)",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/tasks": {
+			"post": {
+				"tags": ["Tasks"],
+				"summary": "Task add",
+				"parameters": [],
+				"requestBody": {
+					"description": "Task object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AddTaskRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Created (Successful operation)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RegistrationResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (Invalid request body or Missing fields)",
+						"content": {}
+					},
+					"409": {
+						"description": "Conflict (Email already in use)",
 						"content": {}
 					}
 				}
