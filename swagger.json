@@ -450,11 +450,27 @@
 			"GetCurrentUserResponse": {
 				"type": "object",
 				"properties": {
+					"name": {
+						"type": "string",
+						"description": "User's name",
+						"example": "User Name"
+					},
 					"email": {
 						"type": "string",
 						"description": "User's email",
 						"format": "email"
+					},
+					"avatarURL": {
+						"type": "string",
+						"description": "User's avatar URL",
+						"example": "some url to be added"
+					},
+					"theme": {
+						"type": "string",
+						"description": "User's color theme",
+						"example": "dark"
 					}
+
 				}
 			},
 			"ProfileUpdateRequest": {
