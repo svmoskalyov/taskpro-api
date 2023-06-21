@@ -39,7 +39,7 @@ router.put(
   ctrl.updateProfile
 );
 
-router.patch(
+router.put(
   "/avatar",
   authenticate,
   uploadCloud.single("avatar"),

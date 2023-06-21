@@ -283,7 +283,7 @@
 			}
 		},
 		"/users/avatar": {
-			"post": {
+			"put": {
 				"security": [{ "Bearer": [] }],
 				"tags": ["UsersAuth"],
 				"summary": "User avatar update",
