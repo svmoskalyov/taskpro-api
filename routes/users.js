@@ -53,7 +53,7 @@ router.patch(
   ctrl.theme
 );
 
-router.post("/help", validateBody(schemas.helpSchema), ctrl.help);
+router.post("/help", authenticate, validateBody(schemas.helpSchema), ctrl.help);
 
 router.post("/logout", authenticate, ctrl.logout);
 
