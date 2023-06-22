@@ -6,6 +6,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const authRouter = require("./routes/users");
+const boardsRouter = require("./routes/boards");
 const tasksRouter = require("./routes/tasks");
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.static("public"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/users", authRouter);
+app.use("/boards", boardsRouter);
 app.use("/tasks", tasksRouter);
 
 app.use((req, res) => {
