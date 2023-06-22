@@ -66,13 +66,6 @@ const addColumnSchema = Joi.object({
       "{{#label}} length must be less than or equal to {{#limit}} characters long",
     "any.required": "missing required {{#label}} field",
   }),
-  icon: Joi.string(),
-  background: Joi.string(),
-  columns: Joi.array().items(
-    Joi.object({
-      title: Joi.string().required(),
-    })
-  ),
 });
 
 const schemas = {
