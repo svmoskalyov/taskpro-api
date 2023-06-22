@@ -6,7 +6,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const authRouter = require("./routes/users");
-// const tasksRouter = require("./routes/tasks");
+const tasksRouter = require("./routes/tasks");
 
 const app = express();
 
@@ -20,7 +20,7 @@ app.use(express.static("public"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/users", authRouter);
-// app.use("/tasks", tasksRouter);
+app.use("/tasks", tasksRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
