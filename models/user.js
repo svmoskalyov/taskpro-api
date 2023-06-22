@@ -10,7 +10,7 @@ const userSchema = new Schema(
     name: {
       type: String,
       minlength: 2,
-      default: "User",
+      required: [true, "Name is required"],
     },
     email: {
       type: String,
@@ -51,7 +51,7 @@ const userSchema = new Schema(
 userSchema.post("save", handleMongooseError);
 
 const registerSchema = Joi.object({
-  name: Joi.string().min(2).max(32),
+  name: Joi.string().min(2).max(32).required(),
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().min(8).max(64).required(),
 });
@@ -61,7 +61,13 @@ const loginSchema = Joi.object({
   password: Joi.string().min(8).max(64).required(),
 });
 
-const refreshSchema = Joi.object({
+const updateProfileSchema = Joi.object({
+  name: Joi.string().min(2).max(32),
+  email: Joi.string().pattern(emailRegexp),
+  password: Joi.string().min(8).max(64),
+});
+
+const refreshTokenSchema = Joi.object({
   refreshToken: Joi.string().required(),
 });
 
@@ -77,7 +83,8 @@ const helpSchema = Joi.object({
 const schemas = {
   registerSchema,
   loginSchema,
-  refreshSchema,
+  updateProfileSchema,
+  refreshTokenSchema,
   themeSchema,
   helpSchema,
 };
