@@ -4,6 +4,11 @@ const Joi = require("joi");
 
 const taskSchema = new Schema(
 	{
+		userId: {
+			type: Schema.Types.ObjectId,
+			ref:"user",
+			required: true,
+		},
 		title: {
 			type: String,
 			required: [true, "Set task title"],
@@ -20,12 +25,7 @@ const taskSchema = new Schema(
 			type: Date,
 			default: false,
 		},
-		// owner: {
-		// 	type: Schema.Types.ObjectId,
-		// 	ref:"user",
-		// 	required: true,
-		// },
-    // boardId: {
+		    // boardId: {
 		// 	type: Schema.Types.ObjectId,
 		// 	ref:"board",
 		// 	required: true,
@@ -45,10 +45,10 @@ const addSchema = Joi.object({
 });
 
 const updateSchema = Joi.object({
-  // title: Joi.string().min(3).max(100).required(),
-	// text: Joi.string().max(500),
-	// priority: Joi.string().valid("low", "middle", "high", "none"),
-	// deadline: Joi.date(),
+  title: Joi.string().min(3).max(100),
+	text: Joi.string().max(500),
+	priority: Joi.string().valid("low", "middle", "high", "none"),
+	deadline: Joi.date(),
 });
 
 const schemas = {
