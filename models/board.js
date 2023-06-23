@@ -74,10 +74,8 @@ const schemas = {
 };
 
 const Board = model("board", boardSchema);
-const Column = model("column", boardSchema);
 
 module.exports = {
   Board,
-  Column,
   schemas,
 };

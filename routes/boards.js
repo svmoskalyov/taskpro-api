@@ -5,6 +5,7 @@ const ctrl = require("../controllers/boards");
 const { validateBody, isValidId, authenticate } = require("../middlewares");
 const { schemas } = require("../models/board");
 
+router.get("/", authenticate, ctrl.getAllBoard);
 router.post(
   "/",
   authenticate,
@@ -21,20 +22,20 @@ router.put(
 router.delete("/:id", authenticate, isValidId, ctrl.deleteByIdBoard);
 
 router.post(
-  "/:id/column",
+  "/:id/columns",
   authenticate,
   validateBody(schemas.addColumnSchema),
   ctrl.addColumn
 );
-router.put(
-  "/:id/column/:id",
+router.patch(
+  "/:id/columns/:idColumn",
   authenticate,
   isValidId,
   validateBody(schemas.addColumnSchema),
   ctrl.updateByIdColumn
 );
 router.delete(
-  "/:id/column/:id",
+  "/:id/columns/:idColumn",
   authenticate,
   isValidId,
   ctrl.deleteByIdColumn
