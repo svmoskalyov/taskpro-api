@@ -25,13 +25,21 @@ const taskSchema = new Schema(
 			type: Date,
 			default: false,
 		},
-		    // boardId: {
+		    boardId: {
+			type: Schema.Types.ObjectId,
+			ref:"board",
+			required: true,
+		},
+			columnId: {
+				type: String,
+			required: [true, "Set task priority"],
+		}
+		// columnId: {
 		// 	type: Schema.Types.ObjectId,
-		// 	ref:"board",
+		// 	ref:"column",
 		// 	required: true,
-		// },
-    
-	},
+		// }
+		},
 	{ versionKey: false, timestamps: true }
 );
 
