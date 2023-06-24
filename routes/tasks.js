@@ -12,10 +12,9 @@ router.delete("/:id", authenticate,  isValidId, ctrl.deleteTask);
 
 router.get("/", authenticate, ctrl.getAllTasks);
 
-// router.get("/:id",authenticate,  isValidId, ctrl.getTaskById);
+router.get("/:id", authenticate,  isValidId, ctrl.getTaskById);
 
-
-// router.put("/:id", authenticate,  isValidId,  validateBody(schemas.addSchema), ctrl.updateTaskById);
+router.put("/:id", authenticate,  isValidId,  validateBody(schemas.updateSchema), ctrl.updateTaskById);
 
 // router.patch("/:id/favorite", authenticate,  isValidId,  validateFavorite(schemas.updateFavoriteSchema), ctrl.updateStatusTask);
 
