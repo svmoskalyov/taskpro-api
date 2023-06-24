@@ -8,7 +8,7 @@ const columnSchema = new Schema({
     type: String,
     required: [true, "Title is required"],
   },
-  owneredBoard: {
+  boardId: {
     type: Schema.Types.ObjectId,
     ref: "board",
     required: true,
@@ -30,7 +30,7 @@ const boardSchema = new Schema(
       default: "",
     },
     columns: [columnSchema],
-    owneredUser: {
+    userId: {
       type: Schema.Types.ObjectId,
       ref: "user",
       required: true,

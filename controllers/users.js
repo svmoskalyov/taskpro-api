@@ -52,7 +52,7 @@ const login = async (req, res) => {
 
   await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
 
-  res.json({
+  res.status(200).json({
     accessToken,
     refreshToken,
   });
@@ -74,9 +74,11 @@ const googleAuth = async (req, res) => {
 
   await User.findByIdAndUpdate(id, { accessToken, refreshToken });
 
-  res.redirect(
-    `${FRONTEND_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}`
-  );
+  res
+    .status(200)
+    .redirect(
+      `${FRONTEND_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}`
+    );
 };
 
 const refresh = async (req, res) => {
@@ -102,7 +104,7 @@ const refresh = async (req, res) => {
 
     await User.findByIdAndUpdate(id, { accessToken, refreshToken });
 
-    res.json({
+    res.status(200).json({
       accessToken,
       refreshToken,
     });
@@ -116,7 +118,7 @@ const getCurrent = async (req, res) => {
 
   console.log("req.user -->", req.user.id);
 
-  res.json({
+  res.status(200).json({
     name,
     email,
     avatarURL,
@@ -132,7 +134,7 @@ const updateProfile = async (req, res) => {
     throw HttpError(404, "Not found");
   }
 
-  res.json({
+  res.status(200).json({
     name: result.name,
     email: result.email,
   });
@@ -153,7 +155,7 @@ const theme = async (req, res) => {
   const { id } = req.user;
   const result = await User.findByIdAndUpdate(id, req.body, { new: true });
 
-  res.json({
+  res.status(200).json({
     theme: result.theme,
   });
 };
