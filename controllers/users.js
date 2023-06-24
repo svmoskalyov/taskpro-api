@@ -4,12 +4,19 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../models/user");
 const { ctrlWrapper, HttpError, sendEmail } = require("../helpers");
 
-const { ACCESS_SECRET_KEY, REFRESH_SECRET_KEY, FRONTEND_URL } = process.env;
+const {
+  HASH_POWER,
+  JWT_ACCESS_SECRET_KEY,
+  JWT_REFRESH_SECRET_KEY,
+  JWT_ACCESS_EXPIRE_TIME,
+  JWT_REFRESH_EXPIRE_TIME,
+  FRONTEND_URL,
+} = process.env;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-  const hashPassword = await bcrypt.hash(password, 10);
+  const hashPassword = await bcrypt.hash(password, Number(HASH_POWER));
 
   if (user) {
     throw HttpError(409, "Email already in use");
@@ -43,11 +50,11 @@ const login = async (req, res) => {
     id: user._id,
   };
 
-  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-    expiresIn: "23h",
+  const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET_KEY, {
+    expiresIn: JWT_ACCESS_EXPIRE_TIME,
   });
-  const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
-    expiresIn: "7d",
+  const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET_KEY, {
+    expiresIn: JWT_REFRESH_EXPIRE_TIME,
   });
 
   await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
@@ -65,11 +72,11 @@ const googleAuth = async (req, res) => {
     id,
   };
 
-  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-    expiresIn: "23h",
+  const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET_KEY, {
+    expiresIn: JWT_ACCESS_EXPIRE_TIME,
   });
-  const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
-    expiresIn: "7d",
+  const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET_KEY, {
+    expiresIn: JWT_REFRESH_EXPIRE_TIME,
   });
 
   await User.findByIdAndUpdate(id, { accessToken, refreshToken });
@@ -85,7 +92,7 @@ const refresh = async (req, res) => {
   const { refreshToken: token } = req.body;
 
   try {
-    const { id } = jwt.verify(token, REFRESH_SECRET_KEY);
+    const { id } = jwt.verify(token, JWT_REFRESH_SECRET_KEY);
     const isExist = await User.findOne({ refreshToken: token });
     if (!isExist) {
       throw HttpError(403, "invalid token");
@@ -95,11 +102,11 @@ const refresh = async (req, res) => {
       id,
     };
 
-    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-      expiresIn: "23h",
+    const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET_KEY, {
+      expiresIn: JWT_ACCESS_EXPIRE_TIME,
     });
-    const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
-      expiresIn: "7d",
+    const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET_KEY, {
+      expiresIn: JWT_REFRESH_EXPIRE_TIME,
     });
 
     await User.findByIdAndUpdate(id, { accessToken, refreshToken });
