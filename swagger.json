@@ -380,7 +380,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/BoardResponse"
+									"$ref": "#/components/schemas/BoardAddResponse"
 								}
 							}
 						}
@@ -474,7 +474,7 @@
 											"updatedAt": "2023-06-24T19:26:38.529Z"
 										}
 									]
-																	}
+								}
 							}
 						}
 					},
@@ -527,7 +527,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/BoardUpdateResponse"
+									"$ref": "#/components/schemas/BoardResponse"
 								},
 								"example": {
 									"_id": "6495f56eff9bc3304dddda90",
@@ -714,28 +714,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/BoardUpdateResponse"
-								},
-								"example": {
-									"_id": "6495f645800579f42aec4a9c",
-									"title": "Another Board",
-									"icon": "icon",
-									"background": "Eiffel Tower",
-									"columns": [
-										{
-											"title": "Projects",
-											"boardId": "6495f645800579f42aec4a9c",
-											"_id": "64960533a66ac8a3d85d0128"
-										},
-										{
-											"title": "Important Things",
-											"boardId": "6495f645800579f42aec4a9c",
-											"_id": "64960547a66ac8a3d85d012f"
-										}
-									],
-									"userId": "648f22dda2d8f8537d580812",
-									"createdAt": "2023-06-23T19:45:09.492Z",
-									"updatedAt": "2023-06-23T20:49:11.438Z"
+									"$ref": "#/components/schemas/ColumnUpdateResponse"
 								}
 							}
 						}
@@ -853,9 +832,32 @@
 									"items": {
 										"$ref": "#/components/schemas/TaskResponse"
 									}
-								}
+								},
+								"example": [
+									{
+										"_id": "649887c118b719e231becee7",
+										"userId": "64971e1907ebf28adb9a5a32",
+										"boardId": "6495f645800579f42aec4a9c",
+										"columnId": "64960533a66ac8a3d85d0128",
+										"title": "simple task ",
+										"text": "",
+										"priority": "none",
+										"createdAt": "2023-06-25T18:30:25.170Z"
+									},
+									{
+										"_id": "649887cb18b719e231beceea",
+										"userId": "64971e1907ebf28adb9a5a32",
+										"boardId": "6495f645800579f42aec4a9c",
+										"columnId": "64960533a66ac8a3d85d0128",
+										"title": "simple task ",
+										"text": "",
+										"priority": "none",
+										"createdAt": "2023-06-25T18:30:35.226Z"
+									}
+								]
 							}
 						}
+						
 					},
 					"400": {
 						"description": "Bad request (No token / Invalid task id)",
@@ -967,7 +969,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/TaskRequest"
+								"$ref": "#/components/schemas/TaskUpdateRequest"
 							}
 						}
 					}
@@ -1205,7 +1207,9 @@
 					"avatarURL": {
 						"type": "string",
 						"description": "User's avatar URL",
-						"example": "some url to be added"
+						"example": {
+							"avatarURL": "https://res.cloudinary.com/dutu5bhfw/image/upload/v1687720651/avatars/myzkyalots4dhwpsuvqy.png"
+						}
 					}
 				}
 			},
@@ -1235,13 +1239,13 @@
 				"properties": {
 					"title": {
 						"type": "string",
-						"description": "Task title",
+						"description": "Board title",
 						"example": "My Board"
 					},
 					"icon": {
 						"type": "string",
 						"description": "Icon",
-						"example": ""
+						"example": "Some Icon"
 					},
 					"background": {
 						"type": "string",
@@ -1261,29 +1265,94 @@
 					}
 				}
 			},
+			"BoardAddResponse": {
+				"type": "object",
+				"properties": {
+					"_id": {
+						"type": "string",
+						"description": "Board ID",
+						"example": "649894e02dfb803518dab624"
+					},
+					"userId": {
+						"type": "string",
+						"description": "Owner User ID",
+						"example": "648f22dda2d8f8537d580812"
+					},
+					"title": {
+						"type": "string",
+						"description": "Board title",
+						"example": "My Board"
+					},
+					"icon": {
+						"type": "string",
+						"description": "Icon",
+						"example": "Icon"
+					},
+					"background": {
+						"type": "string",
+						"description": "Background",
+						"example": "Ocean"
+					},
+					"columns": {
+						"type": "array",
+						"description": "Array of Columns Objects",
+						"items": {
+							"type": "object",
+							"description": "Column Object",
+							"$ref": "#/components/schemas/ColumnResponse"
+						},
+						"example": []
+					},
+					"createdAt": {
+						"type": "string",
+						"description": "Board creation time",
+						"example": "2023-06-23T19:45:09.492Z"
+					},
+					"updatedAt": {
+						"type": "string",
+						"description": "Board  re-new time",
+						"example": "2023-06-23T19:45:09.492Z"
+					}
+				}
+			},
 			"ColumnRequest": {
 				"type": "object",
 				"properties": {
 					"title": {
 						"type": "string",
 						"description": "Column title",
-						"example": "New Column"
+						"example": "New Column title"
 					}
 				}
 			},
 			"ColumnResponse": {
 				"type": "object",
 				"properties": {
-					"title": {
+					"_id": {
 						"type": "string",
-						"description": "Column title",
-						"example": "To Do"
+						"description": "Column Id",
+						"example": "6495fe069dfbe0084edf5cb3"
 					},
 					"boardId": {
 						"type": "string",
 						"description": "Owner board ID",
 						"example": "652ggffg1fg66125dg12"
-					}
+					},
+					"title": {
+						"type": "string",
+						"description": "Column title",
+						"example": "To Do"
+					}					
+				}
+			},
+			"ColumnUpdateResponse": {
+				"type": "object",
+				"properties": {
+							"title": {
+						"type": "string",
+						"description": "New Column title",
+						"example": "New Column title"
+					}					
 				}
 			},
 			"BoardResponse": {
@@ -1324,20 +1393,18 @@
 						},
 						"example": [
 							{
+								"title": "List",
+								"boardId": "6497208588a6d6ed46200343",
+								"_id": "6497308b90ef179cddc9288b"
+							},
+							{
 								"title": "To Do",
-								"_id": "6495fe069dfbe0084edf5cb2"
-							},
-							{
-								"title": "Projects",
-								"_id": "6495fe069dfbe0084edf5cb3"
-							},
-							{
-								"title": "Home Things",
-								"_id": "6495fe069dfbe0084edf5cb4"
+								"boardId": "6497208588a6d6ed46200343",
+								"_id": "6497309d90ef179cddc92895"
 							}
 						]
 					},
-										"createdAt": {
+					"createdAt": {
 						"type": "string",
 						"description": "Task creation time",
 						"example": "2023-06-23T19:45:09.492Z"
@@ -1366,91 +1433,6 @@
 						"type": "string",
 						"description": "Background",
 						"example": "Woods in Autemn"
-					},
-					"columns": {
-						"type": "array",
-						"description": "Array of Columns Objects",
-						"items": {
-							"type": "object",
-							"description": "Column Object",
-							"items": {
-								"$ref": "#/components/schemas/ColumnResponse"
-							},
-							"example": [
-								{
-									"title": "To Do",
-									"_id": "6495fe069dfbe0084edf5cb2"
-								},
-								{
-									"title": "Projects",
-									"_id": "6495fe069dfbe0084edf5cb3"
-								},
-								{
-									"title": "Home Things",
-									"_id": "6495fe069dfbe0084edf5cb4"
-								}
-							]
-						}
-					}
-				}
-			},
-			"BoardUpdateResponse": {
-				"type": "object",
-				"properties": {
-					"title": {
-						"type": "string",
-						"description": "Task title",
-						"example": "Re-Named Board"
-					},
-					"icon": {
-						"type": "string",
-						"description": "Icon",
-						"example": "Another Icon"
-					},
-					"background": {
-						"type": "string",
-						"description": "Background",
-						"example": "Woods in Autemn"
-					},
-					"columns": {
-						"type": "array",
-						"description": "Array of Columns Objects",
-						"items": {
-							"type": "object",
-							"description": "Column Object",
-							"items": {
-								"$ref": "#/components/schemas/ColumnResponse"
-							},
-							"example": [
-								{
-									"title": "To Do",
-									"_id": "6495fe069dfbe0084edf5cb2"
-								},
-								{
-									"title": "Projects",
-									"_id": "6495fe069dfbe0084edf5cb3"
-								},
-								{
-									"title": "Home Things",
-									"_id": "6495fe069dfbe0084edf5cb4"
-								}
-							]
-						}
-					},
-					"userId": {
-						"type": "string",
-						"description": "Owner User ID",
-						"example": "Ocean"
-					},
-					"createdAt": {
-						"type": "string",
-						"description": "Task creation time",
-						"example": "2023-06-23T19:45:09.492Z"
-					},
-					"updatedAt": {
-						"type": "string",
-						"description": "Task task re-new time",
-						"example": "2023-06-23T19:45:09.492Z"
 					}
 				}
 			},
@@ -1490,7 +1472,7 @@
 					}
 				}
 			},
-						"TaskResponse": {
+			"TaskResponse": {
 				"type": "object",
 				"properties": {
 					"_id": {
@@ -1545,7 +1527,32 @@
 						"example": "2023-06-21T18:25:45.953+00:00"
 					}
 				}
-			}	,
+			},
+			"TaskUpdateRequest": {
+				"type": "object",
+				"properties": {
+					"title": {
+						"type": "string",
+						"description": "Task title",
+						"example": "My first important task "
+					},
+					"text": {
+						"type": "string",
+						"description": "Task description",
+						"example": "Some text, describing My first important task"
+					},
+					"priority": {
+						"type": "string",
+						"description": "Task priority",
+						"enum": ["low", "middle", "high", "none"],
+						"example": "high"
+					},
+					"deadline": {
+						"type": "string",
+						"description": "Task deadline",
+						"example": "2024-01-26T13:51:50.417-07:00"
+					}								}
+			},
 			"TaskColumnRequest": {
 				"type": "object",
 				"properties": {
@@ -1555,7 +1562,22 @@
 						"example": "64960533a66ac8a3d85d0128"
 					}
 				}
-			}		
+			},
+			"TasksDeleteResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"description": "Tasks deleted",
+						"example": "Tasks deleted"
+					},
+					"deletedCount": {
+						"type": "number",
+						"description": "Number of tasks deleted",
+						"example": 3
+					}
+				}
+			}
 		},
 		"securitySchemes": {
 			"Bearer": {

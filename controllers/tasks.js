@@ -20,7 +20,7 @@ const getAllTasks = async (req, res) => {
 const deleteAllTasks = async (req, res) => {
 	const { _id: userId } = req.user;
 	const result = await Task.deleteMany({ userId });
-	// console.log("result", result)
+
 	if (!result) {
 		throw HttpError(404, "Not found");
 	}
@@ -39,7 +39,6 @@ const deleteTaskById = async (req, res) => {
 		throw HttpError(404, "Not found");
 	}
 	return res.status(204).json({ message: "Task deleted" });
-	// return res.status(200).json(deletedTask);
 };
 
 const getTaskById = async (req, res) => {
