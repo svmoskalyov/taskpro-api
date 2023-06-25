@@ -9,6 +9,15 @@ const taskSchema = new Schema(
 			ref:"user",
 			required: true,
 		},
+		boardId: {
+			type: Schema.Types.ObjectId,
+			ref:"board",
+			required: [true, "Set task boardId"],
+		},
+			columnId: {
+				type: String,
+			required: [true, "Set task columnId"],
+		},
 		title: {
 			type: String,
 			required: [true, "Set task title"],
@@ -24,21 +33,8 @@ const taskSchema = new Schema(
 		deadline: {
 			type: Date,
 			default: false,
-		},
-		    boardId: {
-			type: Schema.Types.ObjectId,
-			ref:"board",
-			required: true,
-		},
-			columnId: {
-				type: String,
-			required: [true, "Set task priority"],
 		}
-		// columnId: {
-		// 	type: Schema.Types.ObjectId,
-		// 	ref:"column",
-		// 	required: true,
-		// }
+		   
 		},
 	{ versionKey: false, timestamps: true }
 );
@@ -50,6 +46,9 @@ const addSchema = Joi.object({
 	text: Joi.string().max(500),
 	priority: Joi.string().valid("low", "middle", "high", "none"),
 	deadline: Joi.string(),
+	boardId: Joi.string().required(),
+	columnId: Joi.string().required(),
+
 });
 
 const updateSchema = Joi.object({
