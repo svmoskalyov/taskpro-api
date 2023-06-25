@@ -29,44 +29,6 @@ const deleteAllTasks = async (req, res) => {
 		.json({ message: "Tasks deleted", deletedCount: result.deletedCount });
 };
 
-// tasks/boards/{boardId}
-
-const getBoardTasks = async (req, res) => {
-	const { id: boardId } = req.params;
-
-	const list = await Task.find({ boardId});
-	res.status(200).json(list);
-};
-
-const deleteBoardTasks = async (req, res) => {
-	const { id: boardId } = req.params;
-	const result = await Task.deleteMany({boardId});
-
-	if (!result) {
-		throw HttpError(404, "Not found");
-	}
-	return res.status(200).json({ message: "Tasks deleted", deletedCount: result.deletedCount });
-};
-
-// tasks/columns/{columnId}
-
-const getColumnTasks = async (req, res) => {
-	const { id: columnId } = req.params;
-
-	const list = await Task.find({ columnId}, " -updatedAt");
-	res.status(200).json(list);
-};
-
-const deleteColumnTasks = async (req, res) => {
-	const { id: columnId } = req.params;
-	const result = await Task.deleteMany({columnId});
-
-	if (!result) {
-		throw HttpError(404, "Not found");
-	}
-	return res.status(200).json({ message: "Tasks deleted", deletedCount: result.deletedCount });
-};
-
 // tasks/{taskId}
 
 const deleteTaskById = async (req, res) => {
@@ -103,18 +65,27 @@ const  updateTaskById = async (req, res)=> {
 	return res.status(200).json(updatedTask);
 }
 
+const  updateTaskColumnById = async (req, res)=> {
+	const { id } = req.params;
+
+	const updatedTask = await Task.findByIdAndUpdate(id, req.body, {
+		new: true,
+	});
+
+	if (!updatedTask) {
+		throw HttpError(404, "Not found");
+	}
+	return res.status(200).json(updatedTask);
+}
+
 module.exports = {
 	addTask: ctrlWrapper(addTask),
 	getAllTasks: ctrlWrapper(getAllTasks),
 	deleteAllTasks: ctrlWrapper(deleteAllTasks),
 
-	getBoardTasks: ctrlWrapper(getBoardTasks),
-	deleteBoardTasks: ctrlWrapper(deleteBoardTasks),
-
-	getColumnTasks: ctrlWrapper(getColumnTasks),
-	deleteColumnTasks: ctrlWrapper(deleteColumnTasks),
-
 	deleteTaskById: ctrlWrapper(deleteTaskById),
 	getTaskById: ctrlWrapper(getTaskById),
 	updateTaskById: ctrlWrapper(updateTaskById),
+	updateTaskColumnById: ctrlWrapper(updateTaskColumnById),
+
 };
