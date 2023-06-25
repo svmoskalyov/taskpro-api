@@ -82,13 +82,14 @@ const updateByIdColumn = async (req, res) => {
 };
 
 const deleteByIdColumn = async (req, res) => {
-  const { id: boardId, idColumn } = req.params;
+  const { id: boardId, idColumn: columnId } = req.params;
+  console.log(columnId)
   const board = await Board.findById({ _id: boardId });
   if (!board) {
     throw HttpError(404, "Not found");
   }
-  const updateBoard = board.columns.filter((e) => e.id !== idColumn);
-  await Task.deleteMany({ idColumn });
+  const updateBoard = board.columns.filter((e) => e.id !== columnId);
+  await Task.deleteMany({ columnId });
   await Board.findByIdAndUpdate(
     { _id: boardId },
     { columns: updateBoard },
