@@ -1118,6 +1118,93 @@
 					}
 				}
 			}
+		}, 
+		"/tasks/boards/{id}": {
+			"get": {
+				"security": [{ "Bearer": [] }],
+				"tags": ["Tasks"],
+				"summary": "Get all tasks in Board by boardId",
+				"operationId": "getBoardTasks",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "ID of Board to get all tasks in",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Ok (Successful operation)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/TaskResponse"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (No token / Invalid task id)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized (Invalid token)",
+						"content": {}
+					},
+					"404": {
+						"description": "Not found (Invalid user / Invalid session)",
+						"content": {}
+					}
+				}
+			},
+			"delete": {
+				"security": [{ "Bearer": [] }],
+				"tags": ["Tasks"],
+				"summary": "Delete all tasks in Board by boardId",
+				"operationId": "deleteBoardTasks",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "ID of Board to delete tasks in",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Ok (Successful operation)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TasksDeleteResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (No token / Invalid task id)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized (Invalid token)",
+						"content": {}
+					},
+					"404": {
+						"description": "Not found (Invalid user / Invalid session)",
+						"content": {}
+					}
+				}
+			}
 		}
 	},
 	"components": {
@@ -1290,7 +1377,7 @@
 							"type": "object",
 							"description": "Column Object",
 
-							"$ref": "#/components/schemas/Column"
+							"$ref": "#/components/schemas/ColumnRequest"
 						},
 						"example": "[]"
 					}
@@ -1355,9 +1442,22 @@
 						"items": {
 							"type": "object",
 							"description": "Column Object",
-							"$ref": "#/components/schemas/Column"
+							"$ref": "#/components/schemas/ColumnResponse"
 						},
-						"example": "[]"
+						"example": [
+							{
+								"title": "To Do",
+								"_id": "6495fe069dfbe0084edf5cb2"
+							},
+							{
+								"title": "Projects",
+								"_id": "6495fe069dfbe0084edf5cb3"
+							},
+							{
+								"title": "Home Things",
+								"_id": "6495fe069dfbe0084edf5cb4"
+							}
+						]
 					},
 										"createdAt": {
 						"type": "string",
@@ -1396,12 +1496,21 @@
 							"type": "object",
 							"description": "Column Object",
 							"items": {
-								"$ref": "#/components/schemas/Column"
+								"$ref": "#/components/schemas/ColumnResponse"
 							},
 							"example": [
-								{ "title": "To Do" },
-								{ "title": "Projects" },
-								{ "title": "Home Things" }
+								{
+									"title": "To Do",
+									"_id": "6495fe069dfbe0084edf5cb2"
+								},
+								{
+									"title": "Projects",
+									"_id": "6495fe069dfbe0084edf5cb3"
+								},
+								{
+									"title": "Home Things",
+									"_id": "6495fe069dfbe0084edf5cb4"
+								}
 							]
 						}
 					}
@@ -1435,9 +1544,18 @@
 								"$ref": "#/components/schemas/ColumnResponse"
 							},
 							"example": [
-								{ "title": "To Do", "boardId": "65287" },
-								{ "title": "Projects", "boardId": "65287" },
-								{ "title": "Home Things", "boardId": "65287" }
+								{
+									"title": "To Do",
+									"_id": "6495fe069dfbe0084edf5cb2"
+								},
+								{
+									"title": "Projects",
+									"_id": "6495fe069dfbe0084edf5cb3"
+								},
+								{
+									"title": "Home Things",
+									"_id": "6495fe069dfbe0084edf5cb4"
+								}
 							]
 						}
 					},

@@ -29,6 +29,25 @@ const deleteAllTasks = async (req, res) => {
 		.json({ message: "Tasks deleted", deletedCount: result.deletedCount });
 };
 
+// tasks/boards/{boardId}
+
+const getBoardTasks = async (req, res) => {
+	const { id: boardId } = req.params;
+
+	const list = await Task.find({ boardId});
+	res.status(200).json(list);
+};
+
+const deleteBoardTasks = async (req, res) => {
+	const { id: boardId } = req.params;
+	const result = await Task.deleteMany({boardId});
+
+	if (!result) {
+		throw HttpError(404, "Not found");
+	}
+	return res.status(200).json({ message: "Tasks deleted", deletedCount: result.deletedCount });
+};
+
 // tasks/columns/{columnId}
 
 const getColumnTasks = async (req, res) => {
@@ -88,6 +107,9 @@ module.exports = {
 	addTask: ctrlWrapper(addTask),
 	getAllTasks: ctrlWrapper(getAllTasks),
 	deleteAllTasks: ctrlWrapper(deleteAllTasks),
+
+	getBoardTasks: ctrlWrapper(getBoardTasks),
+	deleteBoardTasks: ctrlWrapper(deleteBoardTasks),
 
 	getColumnTasks: ctrlWrapper(getColumnTasks),
 	deleteColumnTasks: ctrlWrapper(deleteColumnTasks),
