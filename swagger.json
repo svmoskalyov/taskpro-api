@@ -214,7 +214,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/UserRequest"
+								"$ref": "#/components/schemas/RegistrationRequest"
 							}
 						}
 					}
