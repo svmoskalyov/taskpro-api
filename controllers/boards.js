@@ -1,4 +1,5 @@
 const { Board } = require("../models/board");
+const { Task } = require("../models/task");
 const { ctrlWrapper, HttpError } = require("../helpers");
 
 const getAllBoard = async (req, res) => {
@@ -28,11 +29,12 @@ const updateByIdBoard = async (req, res) => {
 };
 
 const deleteByIdBoard = async (req, res) => {
-  const { id } = req.params;
-  const result = await Board.findByIdAndRemove(id);
-  if (!result) {
+  const { id: boardId } = req.params;
+  const board = await Board.findByIdAndRemove(boardId);
+  if (!board) {
     throw HttpError(404, "Not found");
   }
+  await Task.deleteMany({ boardId });
 
   res.status(204).json({
     message: "Board deleted",
@@ -42,6 +44,9 @@ const deleteByIdBoard = async (req, res) => {
 const addColumn = async (req, res) => {
   const { id: boardId } = req.params;
   const board = await Board.findById({ _id: boardId });
+  if (!board) {
+    throw HttpError(404, "Not found");
+  }
   board.columns.push({ ...req.body, boardId });
   const result = await Board.findByIdAndUpdate(
     { _id: boardId },
@@ -58,6 +63,9 @@ const updateByIdColumn = async (req, res) => {
   const { id: boardId, idColumn } = req.params;
   const { title } = req.body;
   const board = await Board.findById({ _id: boardId });
+  if (!board) {
+    throw HttpError(404, "Not found");
+  }
   board.columns.map((e) => {
     if (e.id === idColumn) e.title = title;
     return e;
@@ -76,7 +84,11 @@ const updateByIdColumn = async (req, res) => {
 const deleteByIdColumn = async (req, res) => {
   const { id: boardId, idColumn } = req.params;
   const board = await Board.findById({ _id: boardId });
+  if (!board) {
+    throw HttpError(404, "Not found");
+  }
   const updateBoard = board.columns.filter((e) => e.id !== idColumn);
+  await Task.deleteMany({ idColumn });
   await Board.findByIdAndUpdate(
     { _id: boardId },
     { columns: updateBoard },
