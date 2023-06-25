@@ -298,7 +298,7 @@
 					"description": "Avatar update object",
 					"required": true,
 					"content": {
-						"image/png": {
+						"multipart/form-data": {
 							"schema": {
 								"$ref": "#/components/schemas/AvatarUpdateRequest"
 							}
@@ -1315,7 +1315,7 @@
 			"AvatarUpdateRequest": {
 				"type": "object",
 				"properties": {
-					"file": {
+					"avatar": {
 						"type": "string",
 						"format": "binary"
 					}
