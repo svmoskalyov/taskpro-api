@@ -27,7 +27,7 @@ const boardSchema = new Schema(
     },
     background: {
       type: String,
-      default: "",
+      default: "none",
     },
     columns: [columnSchema],
     userId: {
