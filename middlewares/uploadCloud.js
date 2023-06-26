@@ -15,7 +15,7 @@ const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: "avatars",
-    allowedFormats: ["jpg", "png"],
+    allowedFormats: ["jpeg", "jpg", "png"],
     transformation: [
       { width: 250, height: 250, gravity: "faces", crop: "fill" },
     ],
@@ -23,7 +23,12 @@ const storage = new CloudinaryStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype === "image/jpg" || file.mimetype === "image/png") {
+  console.log("req.file", file.mimetype);
+  if (
+    file.mimetype === "image/jpeg" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/png"
+  ) {
     const { avatarName } = req.user;
     cloudinary.api.delete_resources([avatarName], {
       type: "upload",
