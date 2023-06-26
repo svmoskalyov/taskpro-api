@@ -133,8 +133,17 @@ const getCurrent = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const { id } = req.user;
+  const { password } = req.body;
+  const hashPassword = await bcrypt.hash(password, Number(HASH_POWER));
 
-  const result = await User.findByIdAndUpdate(id, req.body, { new: true });
+  const result = await User.findByIdAndUpdate(
+    id,
+    {
+      ...req.body,
+      password: hashPassword,
+    },
+    { new: true }
+  );
   if (!result) {
     throw HttpError(404, "Not found");
   }
