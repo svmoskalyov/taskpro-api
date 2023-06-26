@@ -83,7 +83,6 @@ const updateByIdColumn = async (req, res) => {
 
 const deleteByIdColumn = async (req, res) => {
   const { id: boardId, idColumn: columnId } = req.params;
-  console.log(columnId)
   const board = await Board.findById({ _id: boardId });
   if (!board) {
     throw HttpError(404, "Not found");

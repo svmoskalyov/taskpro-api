@@ -12,8 +12,6 @@ router.post("/", authenticate,  validateBody(schemas.addSchema), ctrl.addTask);
 
 router.get("/", authenticate, ctrl.getAllTasks);
 
-router.delete("/", authenticate,  ctrl.deleteAllTasks);
-
 // tasks/:id - operations with one task by taskId
 
 router.delete("/:id", authenticate,  isValidId, ctrl.deleteTaskById);

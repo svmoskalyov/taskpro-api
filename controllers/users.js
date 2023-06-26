@@ -123,8 +123,6 @@ const refresh = async (req, res) => {
 const getCurrent = async (req, res) => {
   const { name, email, avatarURL, theme } = req.user;
 
-  console.log("req.user -->", req.user.id);
-
   res.status(200).json({
     name,
     email,

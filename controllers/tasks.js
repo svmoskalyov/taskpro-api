@@ -12,21 +12,9 @@ const addTask = async (req, res) => {
 
 const getAllTasks = async (req, res) => {
 	const { _id: owner } = req.user;
-	console.log(owner);
+	
 	const list = await Task.find({ userId: owner }, " -updatedAt");
 	res.status(200).json(list);
-};
-
-const deleteAllTasks = async (req, res) => {
-	const { _id: userId } = req.user;
-	const result = await Task.deleteMany({ userId });
-
-	if (!result) {
-		throw HttpError(404, "Not found");
-	}
-	return res
-		.status(200)
-		.json({ message: "Tasks deleted", deletedCount: result.deletedCount });
 };
 
 // tasks/{taskId}
@@ -80,7 +68,6 @@ const  updateTaskColumnById = async (req, res)=> {
 module.exports = {
 	addTask: ctrlWrapper(addTask),
 	getAllTasks: ctrlWrapper(getAllTasks),
-	deleteAllTasks: ctrlWrapper(deleteAllTasks),
 
 	deleteTaskById: ctrlWrapper(deleteTaskById),
 	getTaskById: ctrlWrapper(getTaskById),

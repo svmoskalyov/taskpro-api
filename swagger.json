@@ -872,38 +872,7 @@
 						"content": {}
 					}
 				}
-			},
-			"delete": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["Tasks"],
-				"summary": "Delete all tasks the User has access to",
-				"operationId": "deleteAllTasks",
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": "Ok (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/TasksDeleteResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (No token / Invalid column id)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			}
+			}			
 		},
 		"/tasks/{id}": {
 			"get": {
