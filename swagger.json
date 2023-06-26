@@ -1531,21 +1531,6 @@
 						"example": "64960533a66ac8a3d85d0128"
 					}
 				}
-			},
-			"TasksDeleteResponse": {
-				"type": "object",
-				"properties": {
-					"message": {
-						"type": "string",
-						"description": "Tasks deleted",
-						"example": "Tasks deleted"
-					},
-					"deletedCount": {
-						"type": "number",
-						"description": "Number of tasks deleted",
-						"example": 3
-					}
-				}
 			}
 		},
 		"securitySchemes": {
