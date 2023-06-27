@@ -46,7 +46,7 @@ const addSchema = Joi.object({
 	title: Joi.string().min(3).max(100).required(),
 	text: Joi.string().max(500).allow("").optional(),
 	priority: Joi.string().valid("low", "medium", "high", "none"),
-	deadline: Joi.string().optional(),
+	deadline: Joi.string().greater('now').optional(),
 	boardId: Joi.string().required(),
 	columnId: Joi.string().required(),
 
@@ -56,7 +56,7 @@ const updateSchema = Joi.object({
   title: Joi.string().min(3).max(100).optional(),
 	text: Joi.string().max(500).allow("").optional(),
 	priority: Joi.string().valid("low", "medium", "high", "none"),
-	deadline: Joi.date().optional(),
+	deadline: Joi.date().greater('now').optional(),
 });
 
 const updateColumnSchema = Joi.object({
