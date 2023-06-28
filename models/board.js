@@ -42,7 +42,7 @@ const boardSchema = new Schema(
 boardSchema.post("save", handleMongooseError);
 
 const addBoardSchema = Joi.object({
-  title: Joi.string().min(1).max(50).required().messages({
+  title: Joi.string().min(1).required().messages({
     "string.min":
       "{{#label}} length must be at least {{#limit}} characters long",
     "string.max":
@@ -59,7 +59,7 @@ const addBoardSchema = Joi.object({
 });
 
 const addColumnSchema = Joi.object({
-  title: Joi.string().min(1).max(50).required().messages({
+  title: Joi.string().min(1).required().messages({
     "string.min":
       "{{#label}} length must be at least {{#limit}} characters long",
     "string.max":
