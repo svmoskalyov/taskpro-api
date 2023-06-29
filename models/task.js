@@ -43,7 +43,7 @@ const taskSchema = new Schema(
 taskSchema.post("save", handleMongooseError);
 
 const addSchema = Joi.object({
-	title: Joi.string().min(3).required(),
+	title: Joi.string().min(1).required(),
 	text: Joi.string().allow("").optional(),
 	priority: Joi.string().valid("low", "medium", "high", "none"),
 	deadline: Joi.date().optional(),
@@ -53,7 +53,7 @@ const addSchema = Joi.object({
 });
 
 const updateSchema = Joi.object({
-  title: Joi.string().min(3).optional(),
+  title: Joi.string().min(1).optional(),
 	text: Joi.string().allow("").optional(),
 	priority: Joi.string().valid("low", "medium", "high", "none"),
 	deadline:Joi.date().optional(),
