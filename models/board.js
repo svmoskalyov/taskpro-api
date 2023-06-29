@@ -45,8 +45,6 @@ const addBoardSchema = Joi.object({
   title: Joi.string().min(1).required().messages({
     "string.min":
       "{{#label}} length must be at least {{#limit}} characters long",
-    "string.max":
-      "{{#label}} length must be less than or equal to {{#limit}} characters long",
     "any.required": "missing required {{#label}} field",
   }),
   icon: Joi.string(),
@@ -62,8 +60,6 @@ const addColumnSchema = Joi.object({
   title: Joi.string().min(1).required().messages({
     "string.min":
       "{{#label}} length must be at least {{#limit}} characters long",
-    "string.max":
-      "{{#label}} length must be less than or equal to {{#limit}} characters long",
     "any.required": "missing required {{#label}} field",
   }),
 });
