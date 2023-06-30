@@ -24,13 +24,12 @@ API for [TaskPro](https://solusblade.github.io/ITD-node-front-project/welcome) p
 ---
 ### If cloned, it is necessary for the project to work
 1. Make sure you have an LTS version of Node.js installed on your computer.
-   [Download and install](https://nodejs.org/en/) if needed.
-2. Install the basic project dependencies with the `npm i` command.
-3. Commands for developers:
-
+   [Download and install](https://nodejs.org/en/) if needed
+2. Install the basic project dependencies with the `npm i` command
+3. Create file **.env** (for example the **.env.template**), with your data
+4. Commands for developers:
 - `npm start` &mdash; server start in production mode
 - `npm run start:dev` &mdash; start the server in development mode
 - `npm run lint` &mdash; run a code check run with eslint, must run before each PR and fix all linter errors
 - `npm lint:fix` &mdash; the same linter check, but with automatic fixes for simple errors
-4. Go to [http://localhost:5000](http://localhost:5000) in your browser. This
-   page will automatically reload after saving changes to project files.
+5. API is available at [http://localhost:5000](http://localhost:5000)
