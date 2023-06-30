@@ -59,9 +59,9 @@ const login = async (req, res) => {
     refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET_KEY, {
       expiresIn: JWT_REFRESH_EXPIRE_TIME,
     });
-  }
 
-  await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
+    await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
+  }
 
   res.status(200).json({
     accessToken,
