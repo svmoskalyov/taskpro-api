@@ -1,1544 +1,1543 @@
 {
-	"openapi": "3.0.1",
-	"info": {
-		"version": "1.0.1",
-		"title": "Express API for 'TaskPro' project",
-		"description": "REST API Application for 'TaskPro' project by ITDreamers, (GoIT), 2023",
-		"contact": {
-			"name": "Git repository",
-			"url": "https://github.com/svmoskalyov/taskpro-api"
-		},
-		"license": {
-			"name": "License - MIT",
-			"url": "https://opensource.org/licenses/MIT"
-		}
-	},
-	"servers": [
-		{ "url": "http://localhost:5000", "description": "Development server" },
-		{
-			"url": "https://taskpro-api.onrender.com",
-			"description": "Production server"
-		}
-	],
-	"tags": [
-		{
-			"name": "UsersAuth",
-			"description": "Authorization endpoints"
-		},
-		{
-			"name": "Boards",
-			"description": "Boards operations endpoints"
-		},
-		{
-			"name": "Tasks",
-			"description": "Tasks operations endpoints"
-		}
-	],
-	"paths": {
-		"/users/register": {
-			"post": {
-				"tags": ["UsersAuth"],
-				"summary": "User registration",
-				"parameters": [],
-				"requestBody": {
-					"description": "Registration's object",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/RegistrationRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "Created (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/UserMinResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (Invalid request body or Missing fields)",
-						"content": {}
-					},
-					"409": {
-						"description": "Conflict (Email already in use)",
-						"content": {}
-					}
-				}
-			}
-		},
-		"/users/login": {
-			"post": {
-				"tags": ["UsersAuth"],
-				"summary": "User authentication",
-				"parameters": [],
-				"requestBody": {
-					"description": "Login's object",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UserRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "OK (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/TokenResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (Invalid request body or Missing fields)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Email or password is wrong)",
-						"content": {}
-					}
-				}
-			}
-		},
-		"/users/google": {
-			"get": {
-				"tags": ["UsersAuth"],
-				"summary": "User Google authentication",
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": "OK (Successful operation (redirect to front-end with accessToken, refreshToken and sid in query). Then use GET /user)"
-					},
-					"400": {
-						"description": "Bad request (Invalid request body or Missing fields)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Email or password is wrong)",
-						"content": {}
-					}
-				}
-			}
-		},
-		"/users/refresh": {
-			"post": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["UsersAuth"],
-				"summary": "User refresh token",
-				"parameters": [],
-				"requestBody": {
-					"description": "Refresh object",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/RefreshRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "OK (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/TokenResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (Invalid request body or Missing fields)",
-						"content": {}
-					},
-					"403": {
-						"description": "Forbidden (Invalid refresh token)",
-						"content": {}
-					}
-				}
-			}
-		},
-		"/users/current": {
-			"get": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["UsersAuth"],
-				"summary": "Get current user info",
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": "OK (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/GetCurrentUserResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (Invalid request body / No token)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid access token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			}
-		},
-		"/users/profile": {
-			"put": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["UsersAuth"],
-				"summary": "User edit profile",
-				"parameters": [],
-				"requestBody": {
-					"description": "Profile update object",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/RegistrationRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "OK (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/UserMinResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (Invalid request body / No token)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid access token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			}
-		},
-		"/users/theme": {
-			"patch": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["UsersAuth"],
-				"summary": "User edit theme",
-				"parameters": [],
-				"requestBody": {
-					"description": "Theme update object",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ThemeUpdateRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "OK (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ThemeUpdateResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (Invalid request body / No token)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			}
-		},
-		"/users/avatar": {
-			"put": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["UsersAuth"],
-				"summary": "User avatar update",
-				"parameters": [],
-				"requestBody": {
-					"description": "Avatar update object",
-					"required": true,
-					"content": {
-						"multipart/form-data": {
-							"schema": {
-								"$ref": "#/components/schemas/AvatarUpdateRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "OK (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/AvatarUpdateResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (Invalid request body / No token)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			}
-		},
-		"/users/logout": {
-			"post": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["UsersAuth"],
-				"summary": "User logout",
-				"parameters": [],
-				"responses": {
-					"204": {
-						"description": "No Content (Successful operation)"
-					},
-					"400": {
-						"description": "Bad request (No token)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			}
-		},
-		"/boards": {
-			"post": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["Boards"],
-				"summary": "Add a single board",
-				"operationId": "addBoard",
-				"parameters": [],
-				"requestBody": {
-					"description": "Add board object",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/BoardAddRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "Created (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/BoardAddResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (Invalid request body / No token)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid access token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			},
-			"get": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["Boards"],
-				"summary": "Get all boards the User has access to",
-				"operationId": "getAllBoard",
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": "Ok (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "array",
-									"items": {
-										"$ref": "#/components/schemas/BoardResponse"
-									},
-									"example": [
-										{
-											"_id": "6495f56eff9bc3304dddda90",
-											"title": "Re-Named Board",
-											"icon": "Another Icon",
-											"background": "Woods in Autemn",
-											"columns": [
-												{
-													"title": "New Column",
-													"owneredBoard": "6495f56eff9bc3304dddda90",
-													"_id": "649604cea66ac8a3d85d00f5"
-												},
-												{
-													"title": "Home Things",
-													"owneredBoard": "6495f56eff9bc3304dddda90",
-													"_id": "64960500a66ac8a3d85d0105"
-												},
-												{
-													"title": "Projects",
-													"owneredBoard": "6495f56eff9bc3304dddda90",
-													"_id": "64960510a66ac8a3d85d0118"
-												}
-											],
-											"createdAt": "2023-06-23T19:41:34.688Z",
-											"updatedAt": "2023-06-23T21:07:57.346Z",
-											"userId": "648f22dda2d8f8537d580812"
-										},
-										{
-											"_id": "6495f645800579f42aec4a9c",
-											"title": "Another Board",
-											"icon": "icon",
-											"background": "Eiffel Tower",
-											"columns": [
-												{
-													"title": "Projects",
-													"owneredBoard": "6495f645800579f42aec4a9c",
-													"_id": "64960533a66ac8a3d85d0128"
-												},
-												{
-													"title": "Important Things",
-													"owneredBoard": "6495f645800579f42aec4a9c",
-													"_id": "64960547a66ac8a3d85d012f"
-												}
-											],
-											"createdAt": "2023-06-23T19:45:09.492Z",
-											"updatedAt": "2023-06-23T20:49:11.438Z",
-											"userId": "648f22dda2d8f8537d580812"
-										},
-										{
-											"_id": "6497436ee7f17b412d6594fc",
-											"title": "TEST Board",
-											"icon": "TEST",
-											"background": "Ocean",
-											"columns": [],
-											"userId": "648f22dda2d8f8537d580812",
-											"createdAt": "2023-06-24T19:26:38.529Z",
-											"updatedAt": "2023-06-24T19:26:38.529Z"
-										}
-									]
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (Invalid request body / No token)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid access token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			}
-		},
-		"/boards/{id}": {
-			"put": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["Boards"],
-				"summary": "Update single board by id",
-				"operationId": "updateByIdBoard",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"description": "Id of board to update",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"description": "Update board object",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/BoardUpdateRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "Ok (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/BoardResponse"
-								},
-								"example": {
-									"_id": "6495f56eff9bc3304dddda90",
-									"title": "Re-Named Board",
-									"icon": "Another Icon",
-									"background": "Woods in Autemn",
-									"columns": [
-										{
-											"title": "To Do",
-											"_id": "6495fe069dfbe0084edf5cb2"
-										},
-										{
-											"title": "Projects",
-											"_id": "6495fe069dfbe0084edf5cb3"
-										},
-										{
-											"title": "Home Things",
-											"_id": "6495fe069dfbe0084edf5cb4"
-										}
-									],
-									"userId": "648f22dda2d8f8537d580812",
-									"createdAt": "2023-06-23T19:41:34.688Z",
-									"updatedAt": "2023-06-23T20:18:14.931Z"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (Invalid request body or Missing fields)",
-						"content": {}
-					},
-					"409": {
-						"description": "Conflict (Email already in use)",
-						"content": {}
-					}
-				}
-			},
-			"delete": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["Boards"],
-				"summary": "Delete a single board by id",
-				"operationId": "deleteByIdBoard",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"description": "ID of board to delete",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"204": {
-						"description": "No Content (Successful operation)"
-					},
-					"400": {
-						"description": "Bad request (No token / Invalid task id)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			}
-		},
-		"/boards/{id}/columns": {
-			"post": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["Boards"],
-				"summary": "Add a new column into board by board id",
-				"operationId": "addColumn",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"description": "Id of board where new column is added",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"description": "Add column object",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ColumnRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "Ok (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/BoardUpdateResponse"
-								},
-								"example": {
-									"_id": "6495f645800579f42aec4a9c",
-									"title": "Another Board",
-									"icon": "icon",
-									"background": "Eiffel Tower",
-									"columns": [
-										{
-											"title": "Projects",
-											"boardId": "6495f645800579f42aec4a9c",
-											"_id": "64960533a66ac8a3d85d0128"
-										},
-										{
-											"title": "Important Things",
-											"boardId": "6495f645800579f42aec4a9c",
-											"_id": "64960547a66ac8a3d85d012f"
-										}
-									],
-									"userId": "648f22dda2d8f8537d580812",
-									"createdAt": "2023-06-23T19:45:09.492Z",
-									"updatedAt": "2023-06-23T20:49:11.438Z"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (Invalid request body or Missing fields)",
-						"content": {}
-					},
-					"409": {
-						"description": "Conflict (Email already in use)",
-						"content": {}
-					}
-				}
-			}
-		},
-		"/boards/{id}/columns/{idColumn}": {
-			"patch": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["Boards"],
-				"summary": "Update column by idColumn in a board by board id",
-				"operationId": "updateByIdColumn",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"description": "Id of board where column is updated",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "idColumn",
-						"in": "path",
-						"description": "Id of column to be updated",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"description": "Update column object",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ColumnRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "Ok (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ColumnUpdateResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (Invalid request body or Missing fields)",
-						"content": {}
-					},
-					"409": {
-						"description": "Conflict (Email already in use)",
-						"content": {}
-					}
-				}
-			},
-			"delete": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["Boards"],
-				"summary": "Delete a single column by idColumn in board by id",
-				"operationId": "deleteByIdColumn",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"description": "Id of board where column is deleted",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "idColumn",
-						"in": "path",
-						"description": "Id of column to be deleted",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"204": {
-						"description": "No Content (Successful operation)"
-					},
-					"400": {
-						"description": "Bad request (No token / Invalid task id)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			}
-		},
-		"/tasks": {
-			"post": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["Tasks"],
-				"summary": "Add a single task",
-				"operationId": "addTask",
-				"parameters": [],
-				"requestBody": {
-					"description": "Add Task object",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/TaskRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "Created (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/TaskResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (No token / Invalid task id)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			},
-			"get": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["Tasks"],
-				"summary": "Get all tasks the User has access to",
-				"operationId": "getAllTasks",
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": "Ok (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "array",
-									"items": {
-										"$ref": "#/components/schemas/TaskResponse"
-									}
-								},
-								"example": [
-									{
-										"_id": "649887c118b719e231becee7",
-										"userId": "64971e1907ebf28adb9a5a32",
-										"boardId": "6495f645800579f42aec4a9c",
-										"columnId": "64960533a66ac8a3d85d0128",
-										"title": "simple task ",
-										"text": "",
-										"priority": "none",
-										"createdAt": "2023-06-25T18:30:25.170Z"
-									},
-									{
-										"_id": "649887cb18b719e231beceea",
-										"userId": "64971e1907ebf28adb9a5a32",
-										"boardId": "6495f645800579f42aec4a9c",
-										"columnId": "64960533a66ac8a3d85d0128",
-										"title": "simple task ",
-										"text": "",
-										"priority": "none",
-										"createdAt": "2023-06-25T18:30:35.226Z"
-									}
-								]
-							}
-						}
-						
-					},
-					"400": {
-						"description": "Bad request (No token / Invalid task id)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			}			
-		},
-		"/tasks/{id}": {
-			"get": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["Tasks"],
-				"summary": "Get single task by id",
-				"operationId": "getTask",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"description": "ID of task to get",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Ok (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/TaskResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (No token / Invalid task id)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			},
-			"put": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["Tasks"],
-				"summary": "Update single task by id",
-				"operationId": "updateTaskById",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"description": "Id of task to update",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"description": "Update Task object",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/TaskUpdateRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "Ok (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/TaskResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (No token / Invalid task id)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			},
-			"patch": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["Tasks"],
-				"summary": "Update single task columnId by taskId (move task card to another column)",
-				"operationId": "updateTaskColumnById",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"description": "Id of task to update",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"description": "Update Task Column object",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/TaskColumnRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "Ok (Successful operation)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/TaskResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Bad request (No token / Invalid task id)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			},
-			"delete": {
-				"security": [{ "Bearer": [] }],
-				"tags": ["Tasks"],
-				"summary": "Delete a single task by id",
-				"operationId": "deleteTask",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"description": "ID of task to delete",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"204": {
-						"description": "No Content (Successful operation)"
-					},
-					"400": {
-						"description": "Bad request (No token / Invalid task id)",
-						"content": {}
-					},
-					"401": {
-						"description": "Not authorized (Invalid token)",
-						"content": {}
-					},
-					"404": {
-						"description": "Not found (Invalid user / Invalid session)",
-						"content": {}
-					}
-				}
-			}
-		}
-	},
-	"components": {
-		"schemas": {
-			"RegistrationRequest": {
-				"type": "object",
-				"required": ["name", "email", "password"],
-				"properties": {
-					"name": {
-						"type": "string",
-						"description": "User's name",
-						"example": "User Name"
-					},
-					"email": {
-						"type": "string",
-						"description": "User's email",
-						"format": "email"
-					},
-					"password": {
-						"type": "string",
-						"description": "User's password",
-						"example": "qwerty123"
-					}
-				}
-			},
-			"UserMinResponse": {
-				"type": "object",
-				"properties": {
-					"name": {
-						"type": "string",
-						"description": "User's name",
-						"example": "User Name"
-					},
-					"email": {
-						"type": "string",
-						"description": "User's email",
-						"format": "email"
-					}
-				}
-			},
-			"UserRequest": {
-				"type": "object",
-				"required": ["email", "password"],
-				"properties": {
-					"email": {
-						"type": "string",
-						"description": "User's email",
-						"format": "email"
-					},
-					"password": {
-						"type": "string",
-						"description": "User's password",
-						"example": "qwerty123"
-					}
-				}
-			},
-			"TokenResponse": {
-				"type": "object",
-				"properties": {
-					"accessToken": {
-						"type": "string",
-						"description": "User's access token",
-						"example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGYyMmRkYTJkOGY4NTM3ZDU4MDgxMiIsImlhdCI6MTY4NzEwNDE4MywiZXhwIjoxNjg3MTg2OTgzfQ.ACnMrbr2S0GB9uSVpb2oGQI813s1kNLuiFZEFCfUN0s"
-					},
-					"refreshToken": {
-						"type": "string",
-						"description": "User's refresh token",
-						"example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGYyMmRkYTJkOGY4NTM3ZDU4MDgxMiIsImlhdCI6MTY4NzEwNDE4MywiZXhwIjoxNjg3MTg2OTgzfQ.ACnMrbr2S0GB9uSVpb2oGQI813s1kNLuiFZEFCfUN0s"
-					}
-				}
-			},
-			"RefreshRequest": {
-				"type": "object",
-				"required": ["refreshToken"],
-				"properties": {
-					"refreshToken": {
-						"type": "string",
-						"description": "User's refresh token",
-						"example": "qwerty1fbhtyj166.yuikui154564561.5y1rh23"
-					}
-				}
-			},
-			"GetCurrentUserResponse": {
-				"type": "object",
-				"properties": {
-					"name": {
-						"type": "string",
-						"description": "User's name",
-						"example": "User Name"
-					},
-					"email": {
-						"type": "string",
-						"description": "User's email",
-						"format": "email"
-					},
-					"avatarURL": {
-						"type": "string",
-						"description": "User's avatar URL",
-						"example": "some url to be added"
-					},
-					"theme": {
-						"type": "string",
-						"description": "User's color theme",
-						"example": "dark"
-					}
-				}
-			},
-			"AvatarUpdateRequest": {
-				"type": "object",
-				"properties": {
-					"avatar": {
-						"type": "string",
-						"format": "binary"
-					}
-				}
-			},
-			"AvatarUpdateResponse": {
-				"type": "object",
-				"properties": {
-					"avatarURL": {
-						"type": "string",
-						"description": "User's avatar URL",
-						"example": {
-							"avatarURL": "https://res.cloudinary.com/dutu5bhfw/image/upload/v1687720651/avatars/myzkyalots4dhwpsuvqy.png"
-						}
-					}
-				}
-			},
-			"ThemeUpdateRequest": {
-				"type": "object",
-				"properties": {
-					"theme": {
-						"type": "string",
-						"description": "User's color theme",
-						"enum": ["dark", "light", "violet"],
-						"example": "dark"
-					}
-				}
-			},
-			"ThemeUpdateResponse": {
-				"type": "object",
-				"properties": {
-					"theme": {
-						"type": "string",
-						"description": "User's color theme",
-						"example": "dark"
-					}
-				}
-			},
-			"BoardAddRequest": {
-				"type": "object",
-				"properties": {
-					"title": {
-						"type": "string",
-						"description": "Board title",
-						"example": "My Board"
-					},
-					"icon": {
-						"type": "string",
-						"description": "Icon",
-						"example": "Some Icon"
-					},
-					"background": {
-						"type": "string",
-						"description": "Background",
-						"example": "Ocean"
-					},
-					"columns": {
-						"type": "array",
-						"description": "Array of Columns Objects",
-						"items": {
-							"type": "object",
-							"description": "Column Object",
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.1",
+    "title": "Express API for 'TaskPro' project",
+    "description": "REST API Application for 'TaskPro' project by ITDreamers, (GoIT), 2023",
+    "contact": {
+      "name": "Git repository",
+      "url": "https://github.com/svmoskalyov/taskpro-api"
+    },
+    "license": {
+      "name": "License - MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://taskpro-api.onrender.com",
+      "description": "Production server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "UsersAuth",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "Boards",
+      "description": "Boards operations endpoints"
+    },
+    {
+      "name": "Tasks",
+      "description": "Tasks operations endpoints"
+    }
+  ],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "tags": ["UsersAuth"],
+        "summary": "User registration",
+        "parameters": [],
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserMinResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (Invalid request body or Missing fields)",
+            "content": {}
+          },
+          "409": {
+            "description": "Conflict (Email already in use)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["UsersAuth"],
+        "summary": "User authentication",
+        "parameters": [],
+        "requestBody": {
+          "description": "Login's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (Invalid request body or Missing fields)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Email or password is wrong)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/google": {
+      "get": {
+        "tags": ["UsersAuth"],
+        "summary": "User Google authentication",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK (Successful operation (redirect to front-end with accessToken, refreshToken and sid in query). Then use GET /user)"
+          },
+          "400": {
+            "description": "Bad request (Invalid request body or Missing fields)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Email or password is wrong)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/refresh": {
+      "post": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["UsersAuth"],
+        "summary": "User refresh token",
+        "parameters": [],
+        "requestBody": {
+          "description": "Refresh object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (Invalid request body or Missing fields)",
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden (Invalid refresh token)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/current": {
+      "get": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["UsersAuth"],
+        "summary": "Get current user info",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCurrentUserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (Invalid request body / No token)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Invalid access token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found (Invalid user / Invalid session)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/profile": {
+      "put": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["UsersAuth"],
+        "summary": "User edit profile",
+        "parameters": [],
+        "requestBody": {
+          "description": "Profile update object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserMinResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (Invalid request body / No token)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Invalid access token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found (Invalid user / Invalid session)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/theme": {
+      "patch": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["UsersAuth"],
+        "summary": "User edit theme",
+        "parameters": [],
+        "requestBody": {
+          "description": "Theme update object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ThemeUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThemeUpdateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (Invalid request body / No token)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Invalid token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found (Invalid user / Invalid session)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/avatar": {
+      "put": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["UsersAuth"],
+        "summary": "User avatar update",
+        "parameters": [],
+        "requestBody": {
+          "description": "Avatar update object",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/AvatarUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvatarUpdateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (Invalid request body / No token)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Invalid token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found (Invalid user / Invalid session)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "post": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["UsersAuth"],
+        "summary": "User logout",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "No Content (Successful operation)"
+          },
+          "400": {
+            "description": "Bad request (No token)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Invalid token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found (Invalid user / Invalid session)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/boards": {
+      "post": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["Boards"],
+        "summary": "Add a single board",
+        "operationId": "addBoard",
+        "parameters": [],
+        "requestBody": {
+          "description": "Add board object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoardAddRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoardAddResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (Invalid request body / No token)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Invalid access token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found (Invalid user / Invalid session)",
+            "content": {}
+          }
+        }
+      },
+      "get": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["Boards"],
+        "summary": "Get all boards the User has access to",
+        "operationId": "getAllBoard",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Ok (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BoardResponse"
+                  },
+                  "example": [
+                    {
+                      "_id": "6495f56eff9bc3304dddda90",
+                      "title": "Re-Named Board",
+                      "icon": "Another Icon",
+                      "background": "Woods in Autemn",
+                      "columns": [
+                        {
+                          "title": "New Column",
+                          "owneredBoard": "6495f56eff9bc3304dddda90",
+                          "_id": "649604cea66ac8a3d85d00f5"
+                        },
+                        {
+                          "title": "Home Things",
+                          "owneredBoard": "6495f56eff9bc3304dddda90",
+                          "_id": "64960500a66ac8a3d85d0105"
+                        },
+                        {
+                          "title": "Projects",
+                          "owneredBoard": "6495f56eff9bc3304dddda90",
+                          "_id": "64960510a66ac8a3d85d0118"
+                        }
+                      ],
+                      "createdAt": "2023-06-23T19:41:34.688Z",
+                      "updatedAt": "2023-06-23T21:07:57.346Z",
+                      "userId": "648f22dda2d8f8537d580812"
+                    },
+                    {
+                      "_id": "6495f645800579f42aec4a9c",
+                      "title": "Another Board",
+                      "icon": "icon",
+                      "background": "Eiffel Tower",
+                      "columns": [
+                        {
+                          "title": "Projects",
+                          "owneredBoard": "6495f645800579f42aec4a9c",
+                          "_id": "64960533a66ac8a3d85d0128"
+                        },
+                        {
+                          "title": "Important Things",
+                          "owneredBoard": "6495f645800579f42aec4a9c",
+                          "_id": "64960547a66ac8a3d85d012f"
+                        }
+                      ],
+                      "createdAt": "2023-06-23T19:45:09.492Z",
+                      "updatedAt": "2023-06-23T20:49:11.438Z",
+                      "userId": "648f22dda2d8f8537d580812"
+                    },
+                    {
+                      "_id": "6497436ee7f17b412d6594fc",
+                      "title": "TEST Board",
+                      "icon": "TEST",
+                      "background": "Ocean",
+                      "columns": [],
+                      "userId": "648f22dda2d8f8537d580812",
+                      "createdAt": "2023-06-24T19:26:38.529Z",
+                      "updatedAt": "2023-06-24T19:26:38.529Z"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (Invalid request body / No token)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Invalid access token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found (Invalid user / Invalid session)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/boards/{id}": {
+      "put": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["Boards"],
+        "summary": "Update single board by id",
+        "operationId": "updateByIdBoard",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of board to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Update board object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoardUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoardResponse"
+                },
+                "example": {
+                  "_id": "6495f56eff9bc3304dddda90",
+                  "title": "Re-Named Board",
+                  "icon": "Another Icon",
+                  "background": "Woods in Autemn",
+                  "columns": [
+                    {
+                      "title": "To Do",
+                      "_id": "6495fe069dfbe0084edf5cb2"
+                    },
+                    {
+                      "title": "Projects",
+                      "_id": "6495fe069dfbe0084edf5cb3"
+                    },
+                    {
+                      "title": "Home Things",
+                      "_id": "6495fe069dfbe0084edf5cb4"
+                    }
+                  ],
+                  "userId": "648f22dda2d8f8537d580812",
+                  "createdAt": "2023-06-23T19:41:34.688Z",
+                  "updatedAt": "2023-06-23T20:18:14.931Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (Invalid request body or Missing fields)",
+            "content": {}
+          },
+          "409": {
+            "description": "Conflict (Email already in use)",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["Boards"],
+        "summary": "Delete a single board by id",
+        "operationId": "deleteByIdBoard",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of board to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content (Successful operation)"
+          },
+          "400": {
+            "description": "Bad request (No token / Invalid task id)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Invalid token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found (Invalid user / Invalid session)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/boards/{id}/columns": {
+      "post": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["Boards"],
+        "summary": "Add a new column into board by board id",
+        "operationId": "addColumn",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of board where new column is added",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Add column object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ColumnRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ok (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoardUpdateResponse"
+                },
+                "example": {
+                  "_id": "6495f645800579f42aec4a9c",
+                  "title": "Another Board",
+                  "icon": "icon",
+                  "background": "Eiffel Tower",
+                  "columns": [
+                    {
+                      "title": "Projects",
+                      "boardId": "6495f645800579f42aec4a9c",
+                      "_id": "64960533a66ac8a3d85d0128"
+                    },
+                    {
+                      "title": "Important Things",
+                      "boardId": "6495f645800579f42aec4a9c",
+                      "_id": "64960547a66ac8a3d85d012f"
+                    }
+                  ],
+                  "userId": "648f22dda2d8f8537d580812",
+                  "createdAt": "2023-06-23T19:45:09.492Z",
+                  "updatedAt": "2023-06-23T20:49:11.438Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (Invalid request body or Missing fields)",
+            "content": {}
+          },
+          "409": {
+            "description": "Conflict (Email already in use)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/boards/{id}/columns/{idColumn}": {
+      "patch": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["Boards"],
+        "summary": "Update column by idColumn in a board by board id",
+        "operationId": "updateByIdColumn",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of board where column is updated",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idColumn",
+            "in": "path",
+            "description": "Id of column to be updated",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Update column object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ColumnRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ColumnUpdateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (Invalid request body or Missing fields)",
+            "content": {}
+          },
+          "409": {
+            "description": "Conflict (Email already in use)",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["Boards"],
+        "summary": "Delete a single column by idColumn in board by id",
+        "operationId": "deleteByIdColumn",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of board where column is deleted",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idColumn",
+            "in": "path",
+            "description": "Id of column to be deleted",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content (Successful operation)"
+          },
+          "400": {
+            "description": "Bad request (No token / Invalid task id)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Invalid token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found (Invalid user / Invalid session)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tasks": {
+      "post": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["Tasks"],
+        "summary": "Add a single task",
+        "operationId": "addTask",
+        "parameters": [],
+        "requestBody": {
+          "description": "Add Task object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (No token / Invalid task id)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Invalid token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found (Invalid user / Invalid session)",
+            "content": {}
+          }
+        }
+      },
+      "get": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["Tasks"],
+        "summary": "Get all tasks the User has access to",
+        "operationId": "getAllTasks",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Ok (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaskResponse"
+                  }
+                },
+                "example": [
+                  {
+                    "_id": "649887c118b719e231becee7",
+                    "userId": "64971e1907ebf28adb9a5a32",
+                    "boardId": "6495f645800579f42aec4a9c",
+                    "columnId": "64960533a66ac8a3d85d0128",
+                    "title": "simple task ",
+                    "text": "",
+                    "priority": "none",
+                    "createdAt": "2023-06-25T18:30:25.170Z"
+                  },
+                  {
+                    "_id": "649887cb18b719e231beceea",
+                    "userId": "64971e1907ebf28adb9a5a32",
+                    "boardId": "6495f645800579f42aec4a9c",
+                    "columnId": "64960533a66ac8a3d85d0128",
+                    "title": "simple task ",
+                    "text": "",
+                    "priority": "none",
+                    "createdAt": "2023-06-25T18:30:35.226Z"
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (No token / Invalid task id)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Invalid token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found (Invalid user / Invalid session)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tasks/{id}": {
+      "get": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["Tasks"],
+        "summary": "Get single task by id",
+        "operationId": "getTask",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of task to get",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (No token / Invalid task id)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Invalid token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found (Invalid user / Invalid session)",
+            "content": {}
+          }
+        }
+      },
+      "put": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["Tasks"],
+        "summary": "Update single task by id",
+        "operationId": "updateTaskById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of task to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Update Task object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (No token / Invalid task id)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Invalid token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found (Invalid user / Invalid session)",
+            "content": {}
+          }
+        }
+      },
+      "patch": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["Tasks"],
+        "summary": "Update single task columnId by taskId (move task card to another column)",
+        "operationId": "updateTaskColumnById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of task to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Update Task Column object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskColumnRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok (Successful operation)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (No token / Invalid task id)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Invalid token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found (Invalid user / Invalid session)",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "security": [{ "Bearer": [] }],
+        "tags": ["Tasks"],
+        "summary": "Delete a single task by id",
+        "operationId": "deleteTask",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of task to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content (Successful operation)"
+          },
+          "400": {
+            "description": "Bad request (No token / Invalid task id)",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized (Invalid token)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found (Invalid user / Invalid session)",
+            "content": {}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "User Name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "UserMinResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "User Name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          }
+        }
+      },
+      "UserRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "User's access token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGYyMmRkYTJkOGY4NTM3ZDU4MDgxMiIsImlhdCI6MTY4NzEwNDE4MywiZXhwIjoxNjg3MTg2OTgzfQ.ACnMrbr2S0GB9uSVpb2oGQI813s1kNLuiFZEFCfUN0s"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "User's refresh token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OGYyMmRkYTJkOGY4NTM3ZDU4MDgxMiIsImlhdCI6MTY4NzEwNDE4MywiZXhwIjoxNjg3MTg2OTgzfQ.ACnMrbr2S0GB9uSVpb2oGQI813s1kNLuiFZEFCfUN0s"
+          }
+        }
+      },
+      "RefreshRequest": {
+        "type": "object",
+        "required": ["refreshToken"],
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "description": "User's refresh token",
+            "example": "qwerty1fbhtyj166.yuikui154564561.5y1rh23"
+          }
+        }
+      },
+      "GetCurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "User Name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar URL",
+            "example": "some url to be added"
+          },
+          "theme": {
+            "type": "string",
+            "description": "User's color theme",
+            "example": "dark"
+          }
+        }
+      },
+      "AvatarUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "avatar": {
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      },
+      "AvatarUpdateResponse": {
+        "type": "object",
+        "properties": {
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar URL",
+            "example": {
+              "avatarURL": "https://res.cloudinary.com/dutu5bhfw/image/upload/v1687720651/avatars/myzkyalots4dhwpsuvqy.png"
+            }
+          }
+        }
+      },
+      "ThemeUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "description": "User's color theme",
+            "enum": ["dark", "light", "violet"],
+            "example": "dark"
+          }
+        }
+      },
+      "ThemeUpdateResponse": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "description": "User's color theme",
+            "example": "dark"
+          }
+        }
+      },
+      "BoardAddRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Board title",
+            "example": "My Board"
+          },
+          "icon": {
+            "type": "string",
+            "description": "Icon",
+            "example": "Some Icon"
+          },
+          "background": {
+            "type": "string",
+            "description": "Background",
+            "example": "Ocean"
+          },
+          "columns": {
+            "type": "array",
+            "description": "Array of Columns Objects",
+            "items": {
+              "type": "object",
+              "description": "Column Object",
 
-							"$ref": "#/components/schemas/ColumnRequest"
-						},
-						"example": "[]"
-					}
-				}
-			},
-			"BoardAddResponse": {
-				"type": "object",
-				"properties": {
-					"_id": {
-						"type": "string",
-						"description": "Board ID",
-						"example": "649894e02dfb803518dab624"
-					},
-					"userId": {
-						"type": "string",
-						"description": "Owner User ID",
-						"example": "648f22dda2d8f8537d580812"
-					},
-					"title": {
-						"type": "string",
-						"description": "Board title",
-						"example": "My Board"
-					},
-					"icon": {
-						"type": "string",
-						"description": "Icon",
-						"example": "Icon"
-					},
-					"background": {
-						"type": "string",
-						"description": "Background",
-						"example": "Ocean"
-					},
-					"columns": {
-						"type": "array",
-						"description": "Array of Columns Objects",
-						"items": {
-							"type": "object",
-							"description": "Column Object",
-							"$ref": "#/components/schemas/ColumnResponse"
-						},
-						"example": []
-					},
-					"createdAt": {
-						"type": "string",
-						"description": "Board creation time",
-						"example": "2023-06-23T19:45:09.492Z"
-					},
-					"updatedAt": {
-						"type": "string",
-						"description": "Board  re-new time",
-						"example": "2023-06-23T19:45:09.492Z"
-					}
-				}
-			},
-			"ColumnRequest": {
-				"type": "object",
-				"properties": {
-					"title": {
-						"type": "string",
-						"description": "Column title",
-						"example": "New Column title"
-					}
-				}
-			},
-			"ColumnResponse": {
-				"type": "object",
-				"properties": {
-					"_id": {
-						"type": "string",
-						"description": "Column Id",
-						"example": "6495fe069dfbe0084edf5cb3"
-					},
-					"boardId": {
-						"type": "string",
-						"description": "Owner board ID",
-						"example": "652ggffg1fg66125dg12"
-					},
-					"title": {
-						"type": "string",
-						"description": "Column title",
-						"example": "To Do"
-					}					
-				}
-			},
-			"ColumnUpdateResponse": {
-				"type": "object",
-				"properties": {
-							"title": {
-						"type": "string",
-						"description": "New Column title",
-						"example": "New Column title"
-					}					
-				}
-			},
-			"BoardResponse": {
-				"type": "object",
-				"properties": {
-					"_id": {
-						"type": "string",
-						"description": "Board ID",
-						"example": "6497436ee7f17b412d6594fc"
-					},
-					"userId": {
-						"type": "string",
-						"description": "Owner User ID",
-						"example": "648f22dda2d8f8537d580812"
-					},
-					"title": {
-						"type": "string",
-						"description": "Task title",
-						"example": "My Board"
-					},
-					"icon": {
-						"type": "string",
-						"description": "Icon",
-						"example": "Icon"
-					},
-					"background": {
-						"type": "string",
-						"description": "Background",
-						"example": "Ocean"
-					},
-					"columns": {
-						"type": "array",
-						"description": "Array of Columns Objects",
-						"items": {
-							"type": "object",
-							"description": "Column Object",
-							"$ref": "#/components/schemas/ColumnResponse"
-						},
-						"example": [
-							{
-								"title": "List",
-								"boardId": "6497208588a6d6ed46200343",
-								"_id": "6497308b90ef179cddc9288b"
-							},
-							{
-								"title": "To Do",
-								"boardId": "6497208588a6d6ed46200343",
-								"_id": "6497309d90ef179cddc92895"
-							}
-						]
-					},
-					"createdAt": {
-						"type": "string",
-						"description": "Task creation time",
-						"example": "2023-06-23T19:45:09.492Z"
-					},
-					"updatedAt": {
-						"type": "string",
-						"description": "Task task re-new time",
-						"example": "2023-06-23T19:45:09.492Z"
-					}
-				}
-			},
-			"BoardUpdateRequest": {
-				"type": "object",
-				"properties": {
-					"title": {
-						"type": "string",
-						"description": "Task title",
-						"example": "Re-Named Board"
-					},
-					"icon": {
-						"type": "string",
-						"description": "Icon",
-						"example": "Another Icon"
-					},
-					"background": {
-						"type": "string",
-						"description": "Background",
-						"example": "Woods in Autemn"
-					}
-				}
-			},
-			"TaskRequest": {
-				"type": "object",
-				"properties": {
-					"title": {
-						"type": "string",
-						"description": "Task title",
-						"example": "My first important task "
-					},
-					"text": {
-						"type": "string",
-						"description": "Task description",
-						"example": "Some text, describing My first important task"
-					},
-					"priority": {
-						"type": "string",
-						"description": "Task priority",
-						"enum": ["low", "middle", "high", "none"],
-						"example": "high"
-					},
-					"deadline": {
-						"type": "string",
-						"description": "Task deadline",
-						"example": "2024-01-26T13:51:50.417-07:00"
-					},
-					"boardId": {
-						"type": "string",
-						"description": "Board Id",
-						"example": "64960533a66ac8a3d85d0128"
-					},
-					"columnId": {
-						"type": "string",
-						"description": "Column Id",
-						"example": "64960533a66ac8a3d85d0128"
-					}
-				}
-			},
-			"TaskResponse": {
-				"type": "object",
-				"properties": {
-					"_id": {
-						"type": "string",
-						"description": "Task id",
-						"example": "649708ad775921c12a1fb1c7"
-					},
-					"userId": {
-						"type": "string",
-						"description": "Task id",
-						"example": "648f22dda2d8f8537d580812"
-					},
-					"boardId": {
-						"type": "string",
-						"description": "Board Id",
-						"example": "64960533a66ac8a3d85d0128"
-					},
-					"columnId": {
-						"type": "string",
-						"description": "Column Id",
-						"example": "64960533a66ac8a3d85d0128"
-					},
-					"title": {
-						"type": "string",
-						"description": "Task title",
-						"example": "My first important task"
-					},
-					"text": {
-						"type": "string",
-						"description": "Task description",
-						"example": "Some text, describing My first important task"
-					},
-					"priority": {
-						"type": "string",
-						"description": "Task priority",
-						"enum": ["low", "middle", "high", "none"],
-						"example": "high"
-					},
-					"deadline": {
-						"type": "string",
-						"description": "Task deadline",
-						"example": "2024-01-26T13:51:50.417-07:00"
-					},
-					"createdAt": {
-						"type": "string",
-						"description": "Task creation time",
-						"example": "2023-06-21T18:25:45.953+00:00"
-					},
-					"updatedAt": {
-						"type": "string",
-						"description": "Task task re-new time",
-						"example": "2023-06-21T18:25:45.953+00:00"
-					}
-				}
-			},
-			"TaskUpdateRequest": {
-				"type": "object",
-				"properties": {
-					"title": {
-						"type": "string",
-						"description": "Task title",
-						"example": "My first important task "
-					},
-					"text": {
-						"type": "string",
-						"description": "Task description",
-						"example": "Some text, describing My first important task"
-					},
-					"priority": {
-						"type": "string",
-						"description": "Task priority",
-						"enum": ["low", "middle", "high", "none"],
-						"example": "high"
-					},
-					"deadline": {
-						"type": "string",
-						"description": "Task deadline",
-						"example": "2024-01-26T13:51:50.417-07:00"
-					}								}
-			},
-			"TaskColumnRequest": {
-				"type": "object",
-				"properties": {
-					"columnId": {
-						"type": "string",
-						"description": "New Column Id",
-						"example": "64960533a66ac8a3d85d0128"
-					}
-				}
-			}
-		},
-		"securitySchemes": {
-			"Bearer": {
-				"type": "http",
-				"scheme": "bearer",
-				"bearerFormat": "JWT"
-			}
-		}
-	}
+              "$ref": "#/components/schemas/ColumnRequest"
+            },
+            "example": "[]"
+          }
+        }
+      },
+      "BoardAddResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Board ID",
+            "example": "649894e02dfb803518dab624"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Owner User ID",
+            "example": "648f22dda2d8f8537d580812"
+          },
+          "title": {
+            "type": "string",
+            "description": "Board title",
+            "example": "My Board"
+          },
+          "icon": {
+            "type": "string",
+            "description": "Icon",
+            "example": "Icon"
+          },
+          "background": {
+            "type": "string",
+            "description": "Background",
+            "example": "Ocean"
+          },
+          "columns": {
+            "type": "array",
+            "description": "Array of Columns Objects",
+            "items": {
+              "type": "object",
+              "description": "Column Object",
+              "$ref": "#/components/schemas/ColumnResponse"
+            },
+            "example": []
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Board creation time",
+            "example": "2023-06-23T19:45:09.492Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Board  re-new time",
+            "example": "2023-06-23T19:45:09.492Z"
+          }
+        }
+      },
+      "ColumnRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Column title",
+            "example": "New Column title"
+          }
+        }
+      },
+      "ColumnResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Column Id",
+            "example": "6495fe069dfbe0084edf5cb3"
+          },
+          "boardId": {
+            "type": "string",
+            "description": "Owner board ID",
+            "example": "652ggffg1fg66125dg12"
+          },
+          "title": {
+            "type": "string",
+            "description": "Column title",
+            "example": "To Do"
+          }
+        }
+      },
+      "ColumnUpdateResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "New Column title",
+            "example": "New Column title"
+          }
+        }
+      },
+      "BoardResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Board ID",
+            "example": "6497436ee7f17b412d6594fc"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Owner User ID",
+            "example": "648f22dda2d8f8537d580812"
+          },
+          "title": {
+            "type": "string",
+            "description": "Task title",
+            "example": "My Board"
+          },
+          "icon": {
+            "type": "string",
+            "description": "Icon",
+            "example": "Icon"
+          },
+          "background": {
+            "type": "string",
+            "description": "Background",
+            "example": "Ocean"
+          },
+          "columns": {
+            "type": "array",
+            "description": "Array of Columns Objects",
+            "items": {
+              "type": "object",
+              "description": "Column Object",
+              "$ref": "#/components/schemas/ColumnResponse"
+            },
+            "example": [
+              {
+                "title": "List",
+                "boardId": "6497208588a6d6ed46200343",
+                "_id": "6497308b90ef179cddc9288b"
+              },
+              {
+                "title": "To Do",
+                "boardId": "6497208588a6d6ed46200343",
+                "_id": "6497309d90ef179cddc92895"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Task creation time",
+            "example": "2023-06-23T19:45:09.492Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Task task re-new time",
+            "example": "2023-06-23T19:45:09.492Z"
+          }
+        }
+      },
+      "BoardUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Task title",
+            "example": "Re-Named Board"
+          },
+          "icon": {
+            "type": "string",
+            "description": "Icon",
+            "example": "Another Icon"
+          },
+          "background": {
+            "type": "string",
+            "description": "Background",
+            "example": "Woods in Autemn"
+          }
+        }
+      },
+      "TaskRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Task title",
+            "example": "My first important task "
+          },
+          "text": {
+            "type": "string",
+            "description": "Task description",
+            "example": "Some text, describing My first important task"
+          },
+          "priority": {
+            "type": "string",
+            "description": "Task priority",
+            "enum": ["low", "middle", "high", "none"],
+            "example": "high"
+          },
+          "deadline": {
+            "type": "string",
+            "description": "Task deadline",
+            "example": "2024-01-26T13:51:50.417-07:00"
+          },
+          "boardId": {
+            "type": "string",
+            "description": "Board Id",
+            "example": "64960533a66ac8a3d85d0128"
+          },
+          "columnId": {
+            "type": "string",
+            "description": "Column Id",
+            "example": "64960533a66ac8a3d85d0128"
+          }
+        }
+      },
+      "TaskResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Task id",
+            "example": "649708ad775921c12a1fb1c7"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Task id",
+            "example": "648f22dda2d8f8537d580812"
+          },
+          "boardId": {
+            "type": "string",
+            "description": "Board Id",
+            "example": "64960533a66ac8a3d85d0128"
+          },
+          "columnId": {
+            "type": "string",
+            "description": "Column Id",
+            "example": "64960533a66ac8a3d85d0128"
+          },
+          "title": {
+            "type": "string",
+            "description": "Task title",
+            "example": "My first important task"
+          },
+          "text": {
+            "type": "string",
+            "description": "Task description",
+            "example": "Some text, describing My first important task"
+          },
+          "priority": {
+            "type": "string",
+            "description": "Task priority",
+            "enum": ["low", "middle", "high", "none"],
+            "example": "high"
+          },
+          "deadline": {
+            "type": "string",
+            "description": "Task deadline",
+            "example": "2024-01-26T13:51:50.417-07:00"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Task creation time",
+            "example": "2023-06-21T18:25:45.953+00:00"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Task task re-new time",
+            "example": "2023-06-21T18:25:45.953+00:00"
+          }
+        }
+      },
+      "TaskUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Task title",
+            "example": "My first important task "
+          },
+          "text": {
+            "type": "string",
+            "description": "Task description",
+            "example": "Some text, describing My first important task"
+          },
+          "priority": {
+            "type": "string",
+            "description": "Task priority",
+            "enum": ["low", "middle", "high", "none"],
+            "example": "high"
+          },
+          "deadline": {
+            "type": "string",
+            "description": "Task deadline",
+            "example": "2024-01-26T13:51:50.417-07:00"
+          }
+        }
+      },
+      "TaskColumnRequest": {
+        "type": "object",
+        "properties": {
+          "columnId": {
+            "type": "string",
+            "description": "New Column Id",
+            "example": "64960533a66ac8a3d85d0128"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
 }
