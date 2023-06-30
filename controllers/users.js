@@ -43,15 +43,23 @@ const login = async (req, res) => {
     throw HttpError(401, "Email or password is wrong");
   }
 
-  const payload = {
-    id: user._id,
-  };
-  const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET_KEY, {
-    expiresIn: JWT_ACCESS_EXPIRE_TIME,
-  });
-  const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET_KEY, {
-    expiresIn: JWT_REFRESH_EXPIRE_TIME,
-  });
+  let accessToken = "";
+  let refreshToken = "";
+
+  if (user.accessToken !== "") {
+    accessToken = user.accessToken;
+    refreshToken = user.refreshToken;
+  } else {
+    const payload = {
+      id: user._id,
+    };
+    accessToken = jwt.sign(payload, JWT_ACCESS_SECRET_KEY, {
+      expiresIn: JWT_ACCESS_EXPIRE_TIME,
+    });
+    refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET_KEY, {
+      expiresIn: JWT_REFRESH_EXPIRE_TIME,
+    });
+  }
 
   await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
 
