@@ -1,4 +1,4 @@
-# <img src="./assets/images/image.png" width="24" height="24"> TaskPro API (backend)
+# <img src="./assets/images/image.png" width="30" height="30"> TaskPro API (backend)
 
 
 ## 📝 About
