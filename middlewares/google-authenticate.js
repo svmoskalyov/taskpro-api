@@ -5,7 +5,8 @@ const { v4: uuidv4 } = require("uuid");
 
 const { User } = require("../models/user");
 
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BACKEND_URL } = process.env;
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BACKEND_URL, HASH_POWER } =
+  process.env;
 
 const googleParams = {
   clientID: GOOGLE_CLIENT_ID,
@@ -27,7 +28,7 @@ const googleCallback = async (
     if (user) {
       return done(null, user);
     }
-    const password = await bcrypt.hash(uuidv4(), 10);
+    const password = await bcrypt.hash(uuidv4(), Number(HASH_POWER));
     const newUser = await User.create({ email, password, name: displayName });
     done(null, newUser);
   } catch (error) {
