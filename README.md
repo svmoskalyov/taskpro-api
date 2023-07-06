@@ -16,7 +16,7 @@ API for [TaskPro](https://solusblade.github.io/ITD-node-front-project/welcome) p
 
 
 ## 🔗 Links
-- [Frontend](https://solusblade.github.io/ITD-node-front-project/welcome)
+- [Frontend](https://svmoskalyov.github.io/taskpro/)
 - [Backend](https://taskpro-api.onrender.com/)
 - [API docs](https://taskpro-api.onrender.com/api-docs/)
 
