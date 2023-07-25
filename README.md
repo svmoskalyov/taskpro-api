@@ -1,8 +1,8 @@
-# <img src="./assets/images/image.png" width="30" height="30"> [TaskPro](https://solusblade.github.io/ITD-node-front-project/welcome) API
+# <img src="./assets/images/image.png" width="30" height="30"> [TaskPro](https://svmoskalyov.github.io/taskpro/welcome) API
 > TaskPro backend
 
 ### 📝 About
-API for [TaskPro](https://solusblade.github.io/ITD-node-front-project/welcome) project. The MongoDB database is used, and the Mongoose library is used to connect to the database. Used HTTP request methods (GET, POST, PUT, PATCH, DELETE). Authentication using JWT and user authorization using email and password is done. The user's password is stored in hashed form. The CORS mechanism is implemented. Only an authorized user can use the application. Each user creates his own tasks that only he can see. Developed API documentation.
+API for [TaskPro](https://svmoskalyov.github.io/taskpro/welcome) project. The MongoDB database is used, and the Mongoose library is used to connect to the database. Used HTTP request methods (GET, POST, PUT, PATCH, DELETE). Authentication using JWT and user authorization using email and password is done. The user's password is stored in hashed form. The CORS mechanism is implemented. Only an authorized user can use the application. Each user creates his own tasks that only he can see. Developed API documentation.
 
 
 ### 🛠 Technologies stack
@@ -16,7 +16,7 @@ API for [TaskPro](https://solusblade.github.io/ITD-node-front-project/welcome) p
 
 
 ### 🔗 Links
-- [Frontend](https://solusblade.github.io/ITD-node-front-project/welcome)
+- [Frontend](https://svmoskalyov.github.io/taskpro/welcome)
 - [API docs](https://taskpro-api.onrender.com/api-docs/)
 
 ---
