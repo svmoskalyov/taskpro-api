@@ -1,4 +1,4 @@
-# <img src="./assets/images/image.png" width="30" height="30"> [TaskPro API](https://solusblade.github.io/ITD-node-front-project/welcome)
+# <img src="./assets/images/image.png" width="30" height="30"> [TaskPro](https://solusblade.github.io/ITD-node-front-project/welcome) API
 > TaskPro backend
 
 ### 📝 About
@@ -16,7 +16,7 @@ API for [TaskPro](https://solusblade.github.io/ITD-node-front-project/welcome) p
 
 
 ### 🔗 Links
-- [Frontend](https://svmoskalyov.github.io/taskpro/)
+- [Frontend](https://solusblade.github.io/ITD-node-front-project/welcome)
 - [API docs](https://taskpro-api.onrender.com/api-docs/)
 
 ---
