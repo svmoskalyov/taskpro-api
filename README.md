@@ -1,11 +1,11 @@
-# <img src="./assets/images/image.png" width="30" height="30"> TaskPro API (backend)
+# <img src="./assets/images/image.png" width="30" height="30"> [TaskPro API](https://solusblade.github.io/ITD-node-front-project/welcome)
+> TaskPro backend
 
-
-## 📝 About
+### 📝 About
 API for [TaskPro](https://solusblade.github.io/ITD-node-front-project/welcome) project. The MongoDB database is used, and the Mongoose library is used to connect to the database. Used HTTP request methods (GET, POST, PUT, PATCH, DELETE). Authentication using JWT and user authorization using email and password is done. The user's password is stored in hashed form. The CORS mechanism is implemented. Only an authorized user can use the application. Each user creates his own tasks that only he can see. Developed API documentation.
 
 
-## 🛠 Technologies stack
+### 🛠 Technologies stack
 - **utilities:** VS Code, Postman, MongoDB Compass
 - **server environment:** Node.js
 - **framework:** Express.js
@@ -15,13 +15,16 @@ API for [TaskPro](https://solusblade.github.io/ITD-node-front-project/welcome) p
 - **cloud services:** Cloudinary, Render
 
 
-## 🔗 Links
+### 🔗 Links
 - [Frontend](https://svmoskalyov.github.io/taskpro/)
-- [Backend](https://taskpro-api.onrender.com/)
 - [API docs](https://taskpro-api.onrender.com/api-docs/)
 
+---
+
+![image](https://github.com/svmoskalyov/taskpro-api/assets/107481840/2ddce262-b83a-46b1-9ada-bdd77ca6c684)
 
 ---
+
 ### If cloned, it is necessary for the project to work
 1. Make sure you have an LTS version of Node.js installed on your computer.
    [Download and install](https://nodejs.org/en/) if needed
